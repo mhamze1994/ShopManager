@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="splitGroupMain" alignment="0" pref="895" max="32767" attributes="0"/>
+          <Component id="splitGroupMain" alignment="0" pref="976" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -50,7 +50,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="scroll1" pref="238" max="32767" attributes="0"/>
+                          <Component id="scroll1" pref="323" max="32767" attributes="0"/>
                           <Component id="textView1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -274,10 +274,10 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="groupPane4" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="groupPane4" alignment="1" pref="0" max="32767" attributes="0"/>
                                   <Component id="jSeparator2" alignment="1" max="32767" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace min="0" pref="84" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="contactPicker" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
@@ -319,7 +319,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="groupPane4" max="32767" attributes="0"/>
+                              <Component id="groupPane4" min="-2" pref="49" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="textViewStock" alignment="3" min="-2" max="-2" attributes="0"/>

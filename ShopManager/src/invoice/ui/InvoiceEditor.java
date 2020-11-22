@@ -26,9 +26,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
@@ -118,6 +118,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         itemPicker.setOnPick((Item item) -> {
             refreshLatestTrades();
             fillItemPrices(item);
+            inputSuAmount.requestFocusInWindow();
         });
 
         refreshLatestTrades();
@@ -565,7 +566,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPanePaymentLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(groupPanePaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(scroll1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(scroll1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                     .addComponent(textView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -672,10 +673,10 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             .addGroup(paneBodyLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(groupPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(groupPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBodyLayout.createSequentialGroup()
-                        .addGap(0, 84, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(contactPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -709,7 +710,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(groupPane4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(groupPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textViewStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -765,7 +766,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitGroupMain, javax.swing.GroupLayout.DEFAULT_SIZE, 895, Short.MAX_VALUE)
+            .addComponent(splitGroupMain, javax.swing.GroupLayout.DEFAULT_SIZE, 976, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -897,13 +898,16 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         public DefaultPriceListRenderer() {
             tv = new TextView();
-            tv.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            tv.setOpaque(true);
+            tv.setPreferredSize(new Dimension(1, 16));
             tv.setHorizontalTextPosition(TextView.RIGHT);
         }
 
         @Override
         public Component getListCellRendererComponent(JList<? extends ItemPrice> list, ItemPrice value, int index, boolean isSelected, boolean cellHasFocus) {
             tv.setText(value.description());
+            tv.setBackground(isSelected ? AppTheme.COLOR_MAIN : AppTheme.COLOR_WHITE);
+            tv.setForeground(isSelected ? AppTheme.COLOR_WHITE : AppTheme.COLOR_GRAY);
             return tv;
         }
     }
