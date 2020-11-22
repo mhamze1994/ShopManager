@@ -13,8 +13,6 @@ import entity.invoice.Invoice;
 import entity.invoice.InvoiceDetail;
 import entity.invoice.InvoiceManager;
 import entity.Payment;
-import application.ui.ContactPicker;
-import application.ui.ItemPicker;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.EventQueue;
@@ -33,8 +31,6 @@ import javax.swing.event.ListSelectionEvent;
 import ui.container.TabbedContainer;
 import ui.controls.PressButton;
 import ui.controls.input.InputField;
-import ui.controls.input.SearchBox;
-import ui.controls.input.SearchBoxEditor;
 
 /**
  *
@@ -153,6 +149,10 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         });
 
         //Set initial invoice values
+        if (invoice.getInvoiceId() != 0) {
+            inputFieldNumber1.setText(invoice.getInvoiceId() + "");
+        }
+
         inputDate.setText(invoice.getDate() + "");
         Contact contact = Contact.find(invoice.getContact());
         setSelectedContact(contact);
@@ -294,6 +294,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             if (invoice.getInvoiceId() == 0) {
                 InvoiceManager.insert(invoice);
                 refreshTitle(parentTabbedPanel);
+                inputFieldNumber1.setText(invoice.getInvoiceId() + "");
             } else {
                 if (InvoiceManager.update(invoice) == false) {
                     JOptionPane.showMessageDialog(this, "اعمال تغییرات امکان پذیر نمیباشد.", "خطا", JOptionPane.ERROR_MESSAGE);

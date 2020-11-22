@@ -35,9 +35,11 @@ public class CustomeDefaultTableCellRenderer implements TableCellRenderer {
             tv.setText(String.valueOf(value));
         }
         if (isSelected) {
-            tv.setBackground(AppTheme.COLOR_SILVER_DARKER);
+            tv.setBackground(AppTheme.COLOR_MAIN);
+            tv.setForeground(AppTheme.COLOR_WHITE);
         } else {
             tv.setBackground(row % 2 == 0 ? AppTheme.COLOR_WHITE : AppTheme.COLOR_LIGHT_CYAN);
+            tv.setForeground(AppTheme.COLOR_GRAY);
 
         }
         return tv;

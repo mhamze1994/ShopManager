@@ -8,11 +8,13 @@ package report.ui;
 import invoice.ui.CustomeDefaultTableCellRenderer;
 import invoice.ui.CustomeTableHeaderRenderer;
 import java.awt.ComponentOrientation;
+import java.awt.event.MouseAdapter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionListener;
 import report.Report;
 
 /**
@@ -54,6 +56,19 @@ public class ReportTable extends javax.swing.JPanel {
         }
 
     }
+    
+    public int getSelectedRow(){
+        return jTable.getSelectedRow();
+    }
+    
+    public Object getValue(int row , int col){
+        return jTable.getValueAt(row, col);
+    }
+
+    public void addMouseAdapter(MouseAdapter adapter){
+        jTable.addMouseListener(adapter);
+    }
+    
 
     public void setColumnPreferredWidth(int index, int width) {
         jTable.getColumnModel().getColumn(index).setPreferredWidth(width);

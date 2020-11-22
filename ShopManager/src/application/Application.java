@@ -9,9 +9,10 @@ import entity.invoice.Invoice;
 import invoice.ui.InvoiceEditor;
 import application.ui.ContactEditor;
 import application.ui.ItemEditor;
+import entity.invoice.InvoiceManager;
 import java.awt.ComponentOrientation;
 import javax.swing.UIManager;
-        
+
 import invoice.ui.InvoiceIdInputDialog;
 import report.ui.ItemPricingDialog;
 import report.ui.ReportPanelCustomerItemBill;
@@ -271,6 +272,11 @@ public class Application extends javax.swing.JFrame {
         openInvoicePanel(new Invoice(Invoice.TYPE_REFUND_SELL));
     }
 
+    public void openInvoicePanel(long invoiceId) {
+        Invoice i = InvoiceManager.find(invoiceId);
+        openInvoicePanel(i);
+    }
+
     private void openInvoicePanel(Invoice invoice) {
         InvoiceEditor invoiceEditor = new InvoiceEditor(invoice);
         tabbedContainer.add(invoiceEditor);
@@ -366,7 +372,5 @@ public class Application extends javax.swing.JFrame {
     private ui.container.TabbedContainer tabbedContainer;
     private ui.container.TabbedContainer tabbedContainerHeader;
     // End of variables declaration//GEN-END:variables
-
-   
 
 }

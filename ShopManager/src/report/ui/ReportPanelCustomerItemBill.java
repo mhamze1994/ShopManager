@@ -5,18 +5,15 @@
  */
 package report.ui;
 
-import entity.Contact;
-import entity.Item;
 import invoice.ui.CustomFocusTraversalPolicy;
 import java.awt.Component;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import report.ReportCustomerItemBill;
 import ui.container.GroupPane;
 import ui.container.TabbedContainer;
 import ui.controls.PressButton;
-import ui.controls.input.SearchBox;
-import ui.controls.input.SearchBoxEditor;
 
 /**
  *
@@ -24,9 +21,6 @@ import ui.controls.input.SearchBoxEditor;
  */
 public class ReportPanelCustomerItemBill extends GroupPane {
 
-    private Item item;
-
-    private Contact contact;
     private ReportCustomerItemBill reportCustomerItemBill;
     private TabbedContainer tabbedPane;
 
@@ -44,25 +38,13 @@ public class ReportPanelCustomerItemBill extends GroupPane {
         pressButtonClear.setTextVerticalPosition(PressButton.POSITION_CENTER);
         pressButtonClear.drawTextUnderline(true);
 
-        SearchBox.setupSearchbox(Contact.class,
-                searchBoxContact,
-                "CALL search_contact(?)",
-                (Object currentValue) -> {
-                    setSelectedContact((Contact) currentValue);
-                });
-        SearchBox.setupSearchbox(Item.class,
-                searchBoxItem,
-                "CALL search_item(?)",
-                (Object currentValue) -> {
-                    setSelectedItem((Item) currentValue);
-                });
-
         ArrayList<Component> uiComponentOrder = new ArrayList<>();
         uiComponentOrder.add(inputDateFrom);
         uiComponentOrder.add(inputDateTo);
-        uiComponentOrder.add(((SearchBoxEditor) searchBoxContact.getEditor()).getInputField());
-        uiComponentOrder.add(inputFieldItemId);
-        uiComponentOrder.add(((SearchBoxEditor) searchBoxItem.getEditor()).getInputField());
+        uiComponentOrder.add(contactPicker1.getNumberField());
+        uiComponentOrder.add(contactPicker1.getSearchField());
+        uiComponentOrder.add(itemPicker1.getNumberField());
+        uiComponentOrder.add(itemPicker1.getSearchField());
         uiComponentOrder.add(pressButtonReport);
         groupPane1.setFocusCycleRoot(true);
         groupPane1.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(uiComponentOrder));
@@ -82,9 +64,10 @@ public class ReportPanelCustomerItemBill extends GroupPane {
         reportTable.setColumnPreferredWidth(index++, 50);
 
         java.awt.EventQueue.invokeLater(() -> {
-            searchBoxContact.requestFocusInWindow();
+            contactPicker1.getNumberField().requestFocusInWindow();
         });
 
+       
     }
 
     /**
@@ -97,25 +80,20 @@ public class ReportPanelCustomerItemBill extends GroupPane {
     private void initComponents() {
 
         groupPane1 = new ui.container.GroupPane();
-        searchBoxItem = new ui.controls.input.SearchBox();
-        searchBoxContact = new ui.controls.input.SearchBox();
         inputDateTo = new ui.controls.input.InputFieldDate();
         inputDateFrom = new ui.controls.input.InputFieldDate();
         jSeparator1 = new javax.swing.JSeparator();
-        inputFieldItemId = new ui.controls.input.InputFieldNumber();
         pressButtonClear = new ui.controls.PressButton();
         pressButtonReport = new ui.controls.PressButton();
         jSeparator2 = new javax.swing.JSeparator();
+        itemPicker1 = new application.ui.ItemPicker();
+        contactPicker1 = new application.ui.ContactPicker();
         reportTable = new report.ui.ReportTable();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setLayout(new java.awt.BorderLayout(5, 5));
 
         groupPane1.setPreferredSize(new java.awt.Dimension(100, 60));
-
-        searchBoxItem.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-
-        searchBoxContact.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "مخاطب", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         inputDateTo.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "تا تاریخ", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
@@ -127,13 +105,6 @@ public class ReportPanelCustomerItemBill extends GroupPane {
         });
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        inputFieldItemId.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شناسه کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-        inputFieldItemId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputFieldItemIdActionPerformed(evt);
-            }
-        });
 
         pressButtonClear.setText("پاک کردن");
         pressButtonClear.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -166,14 +137,12 @@ public class ReportPanelCustomerItemBill extends GroupPane {
         groupPane1Layout.setHorizontalGroup(
             groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(groupPane1Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(searchBoxItem, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputFieldItemId, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(itemPicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchBoxContact, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contactPicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -190,20 +159,22 @@ public class ReportPanelCustomerItemBill extends GroupPane {
             groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPane1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(inputDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(searchBoxContact, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(inputDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(searchBoxItem, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(inputFieldItemId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pressButtonReport, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pressButtonClear, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(itemPicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(inputDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(pressButtonReport, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                .addComponent(pressButtonClear, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(groupPane1Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(contactPicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(12, 12, 12))
         );
 
         add(groupPane1, java.awt.BorderLayout.NORTH);
@@ -226,47 +197,34 @@ public class ReportPanelCustomerItemBill extends GroupPane {
         clearInputs();
     }//GEN-LAST:event_pressButtonClearActionPerformed
 
-    private void inputFieldItemIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputFieldItemIdActionPerformed
-        findItemWithId();
-    }//GEN-LAST:event_inputFieldItemIdActionPerformed
-
     private void inputDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputDateFromActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_inputDateFromActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private application.ui.ContactPicker contactPicker1;
     private ui.container.GroupPane groupPane1;
     private ui.controls.input.InputFieldDate inputDateFrom;
     private ui.controls.input.InputFieldDate inputDateTo;
-    private ui.controls.input.InputFieldNumber inputFieldItemId;
+    private application.ui.ItemPicker itemPicker1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private ui.controls.PressButton pressButtonClear;
     private ui.controls.PressButton pressButtonReport;
     private report.ui.ReportTable reportTable;
-    private ui.controls.input.SearchBox searchBoxContact;
-    private ui.controls.input.SearchBox searchBoxItem;
     // End of variables declaration//GEN-END:variables
-
-    private void setSelectedContact(Contact contact) {
-        this.contact = contact;
-        refreshTitle(tabbedPane);
-    }
-
-    private void setSelectedItem(Item item) {
-        this.item = item;
-        inputFieldItemId.setText(item == null ? "" : item.getItemId() + "");
-        refreshTitle(tabbedPane);
-    }
 
     private void apply() {
 
         reportCustomerItemBill.setDateStart(inputDateFrom.isValidInput() ? Long.parseLong(inputDateFrom.getText().replace("/", "")) : 0L);
         reportCustomerItemBill.setDateEnd(inputDateTo.isValidInput() ? Long.parseLong(inputDateTo.getText().replace("/", "")) : 0L);
 
-        reportCustomerItemBill.setCustomerId(contact == null ? 0L : contact.getContactId());
-        reportCustomerItemBill.setItemId(item == null ? 0L : item.getItemId());
+        reportCustomerItemBill.setCustomerId(contactPicker1.getSelectedContact() == null
+                ? 0L : contactPicker1.getSelectedContact().getContactId());
+
+        reportCustomerItemBill.setItemId(itemPicker1.getSelectedItem() == null
+                ? 0L : itemPicker1.getSelectedItem().getItemId());
 
         reportTable.apply();
 
@@ -275,28 +233,10 @@ public class ReportPanelCustomerItemBill extends GroupPane {
     private void clearInputs() {
         inputDateFrom.setText("");
         inputDateTo.setText("");
-        inputFieldItemId.setText("");
 
-        searchBoxContact.setSelectedItem(null);
-        searchBoxItem.setSelectedItem(null);
-        contact = null;
+        contactPicker1.setSelectedContact(null);
+        itemPicker1.setSelectedItem(null);
 
-        item = null;
-
-    }
-
-    private void findItemWithId() {
-        try {
-
-            Item item = Item.find(Long.parseLong(inputFieldItemId.getText()));
-            if (item == null) {
-                JOptionPane.showMessageDialog(this, "کالای مورد نظر یافت نشد!", "پیام", JOptionPane.WARNING_MESSAGE);
-            } else {
-                setSelectedItem(item);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "ورودی نا معبر است!", "پیام", JOptionPane.WARNING_MESSAGE);
-        }
     }
 
     public void refreshTitle(TabbedContainer parent) {
@@ -304,13 +244,13 @@ public class ReportPanelCustomerItemBill extends GroupPane {
 
         String title = "صورتحساب ";
 
-        if (contact != null) {
-            title += "/" + (contact.getName() + " " + contact.getLastname()).trim();
+        if (contactPicker1.getSelectedContact() != null) {
+            title += "/" + contactPicker1.getSelectedContact().concatinatedInfo();
         } else {
             title += " مشتری";
         }
-        if (item != null) {
-            title += "/" + item.getDescription();
+        if (itemPicker1.getSelectedItem() != null) {
+            title += "/" + itemPicker1.getSelectedItem().getDescription();
         } else {
             title += "/کالا";
         }
