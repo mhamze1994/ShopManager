@@ -13,11 +13,11 @@ import entity.invoice.Invoice;
 import entity.invoice.InvoiceDetail;
 import entity.invoice.InvoiceManager;
 import entity.Payment;
+import application.ui.ContactPicker;
+import application.ui.ItemPicker;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.EventQueue;
-import java.awt.HeadlessException;
-import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -47,9 +47,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     private Invoice invoice;
 
-    private Item selectedItem;
-    private Contact selectedContact;
-
+//    private Contact selectedContact;
     private InvoiceDetail selectedDetail;
 
     private String[] paymentTypes = {"POS", "صندوق"};
@@ -99,19 +97,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         comboListPaymentTypes.setModel(new DefaultComboBoxModel(paymentTypes));
 
-        SearchBox.setupSearchbox(Contact.class,
-                searchBoxContact,
-                "CALL search_contact(?)",
-                (Object currentValue) -> {
-                    setSelectedContact((Contact) currentValue);
-                });
-        SearchBox.setupSearchbox(Item.class,
-                searchBoxItem,
-                "CALL search_item(?)",
-                (Object currentValue) -> {
-                    setSelectedItem((Item) currentValue);
-                });
-
         invoiceItemList.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (e.getValueIsAdjusting() == false) {
                 int selectedRow = invoiceItemList.getSelectedRow();
@@ -120,12 +105,23 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 }
             }
         });
+        contactPicker.setOnPick((Contact contact) -> {
+            if (parentTabbedPanel != null) {
+                refreshTitle(parentTabbedPanel);
+            }
+            refreshLatestTrades();
+        });
+        itemPicker.setOnPick((Item item) -> {
+            refreshLatestTrades();
+        });
 
+        refreshLatestTrades();
         ArrayList<Component> uiComponentOrder = new ArrayList<>();
         uiComponentOrder.add(inputDate);
-        uiComponentOrder.add(inputContact);
-        uiComponentOrder.add(((SearchBoxEditor) searchBoxContact.getEditor()).getInputField());
-        uiComponentOrder.add(((SearchBoxEditor) searchBoxItem.getEditor()).getInputField());
+        uiComponentOrder.add(contactPicker.getNumberField());
+        uiComponentOrder.add(contactPicker.getSearchField());
+        uiComponentOrder.add(itemPicker.getNumberField());
+        uiComponentOrder.add(itemPicker.getSearchField());
         uiComponentOrder.add(inputSuAmount);
         uiComponentOrder.add(inputPrice);
         uiComponentOrder.add(buttonInsert);
@@ -135,16 +131,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         jScrollPane2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         invoiceItemList.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
-        String contactTitle;
         InvoiceTableModelSetup.setupTableNormal(invoice, invoiceItemList, this);
 
-        if (Invoice.inoutBuy(invoice.getOperationType())) {
-            contactTitle = "فروشنده";
-        } else {
-            contactTitle = "خریدار";
-        }
-        ((TitledBorder) searchBoxContact.getBorder()).setTitle(contactTitle);
-        ((TitledBorder) inputContact.getBorder()).setTitle("کد " + contactTitle);
+        contactPicker.updateTitles(invoice.getOperationType());
 
         if (Invoice.isRefund(invoice.getOperationType())) {
             inputAreaLog.setVisible(true);
@@ -167,7 +156,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         inputDate.setText(invoice.getDate() + "");
         Contact contact = Contact.find(invoice.getContact());
         setSelectedContact(contact);
-        searchBoxContact.setItem(selectedContact);
+//        searchBoxContact.setItem(selectedContact);
 
         for (Payment payment : invoice.getContactPayments()) {
             addPaymentMethod(payment);
@@ -189,14 +178,14 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         textViewInvoiceSummary.setText(str);
     }
 
-    public void setSelectedDetail(InvoiceDetail detail) {
+    private void setSelectedDetail(InvoiceDetail detail) {
         selectedDetail = detail;
 
         buttonDelete.setVisible(true);
         buttonCancel.setVisible(true);
 
         setSelectedItem(detail.getItem());
-        searchBoxItem.setSelectedItem(selectedItem);
+//        itemPicker.setSelectedItem(detail.getItem());
 
         inputSuAmount.setText(detail.getSuAmount().abs().stripTrailingZeros().toPlainString());
         inputPrice.setText(detail.getSuPrice().abs().stripTrailingZeros().toPlainString());
@@ -217,7 +206,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             isValid = false;
         }
 
-        if (selectedItem == null) {
+        if (itemPicker.getSelectedItem() == null) {
             errorLog.append("هیچ کالایی انتخاب نشده است. -").append(System.lineSeparator());
             isValid = false;
         }
@@ -268,7 +257,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             isValid = false;
             errorLog.append("تاریخ اشتباه وارد شده است. -").append(System.lineSeparator());
         }
-        if (selectedContact == null) {
+        if (contactPicker.getSelectedContact() == null) {
             isValid = false;
             errorLog.append("مخاطب فاکتور انتخاب نشده است. -").append(System.lineSeparator());
         }
@@ -300,7 +289,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             }
 
             invoice.setDate(Long.parseLong(inputDate.getText().replace("/", "")));
-            invoice.setContact(selectedContact.getContactId());
+            invoice.setContact(contactPicker.getSelectedContact().getContactId());
 
             if (invoice.getInvoiceId() == 0) {
                 InvoiceManager.insert(invoice);
@@ -334,8 +323,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 title = "حواله فروش";
                 break;
         }
-        if (selectedContact != null) {
-            title += " - " + selectedContact.getName() + " " + selectedContact.getLastname();
+        if (contactPicker.getSelectedContact() != null) {
+            title += " - " + contactPicker.getSelectedContact().concatinatedInfo();
         }
         this.parentTabbedPanel.setTitleAt(this.parentTabbedPanel.indexOfComponent(this), title.trim());
 
@@ -365,9 +354,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         }
 
         BigDecimal inputAmount = new BigDecimal(inputSuAmount.getText());
-        //in case the operation is in editing mode leave stock check to the final step
+//        in case the operation is in editing mode leave stock check to the final step
         if (invoice.getInvoiceId() == 0) {
-            if (Invoice.isExporting(invoice.getOperationType()) && selectedItem.getLastKnownStock().compareTo(inputAmount) == -1) {
+            if (Invoice.isExporting(invoice.getOperationType()) && itemPicker.getSelectedItem().getLastKnownStock().compareTo(inputAmount) == -1) {
                 JOptionPane.showMessageDialog(this, "موجودی کافی نیست!", "خطا", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -380,7 +369,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             invoiceDetail = new InvoiceDetail();
         }
 
-        invoiceDetail.setItem(selectedItem);
+        invoiceDetail.setItem(itemPicker.getSelectedItem());
         invoiceDetail.setSuAmount(inputAmount);
         invoiceDetail.setSuPrice(new BigDecimal(inputPrice.getText()));
 
@@ -396,14 +385,14 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             buttonDelete.setVisible(false);
             buttonCancel.setVisible(false);
 
-            selectedItem = null;
+            itemPicker.setSelectedItem(null);
             selectedDetail = null;
-            InputField inputFieldItem = ((SearchBoxEditor) searchBoxItem.getEditor()).getInputField();
+            InputField inputFieldItem = itemPicker.getSearchField();
             inputFieldItem.requestFocus();
             inputFieldItem.setText("");
             inputSuAmount.setText("");
             inputPrice.setText("");
-            inputFieldStockId.setText("");
+            itemPicker.getNumberField().setText("");
             invoiceItemList.clearSelection();
             invoiceItemList.revalidate();
             invoiceItemList.repaint();
@@ -412,15 +401,12 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     private void setSelectedItem(Item item) {
         try {
-            this.selectedItem = item;
-            if (this.selectedItem != null) {
+            if (item != null) {
                 textViewStock.setText("موجودی : " + item.fetchItemStock().stripTrailingZeros().toPlainString());
-                inputFieldStockId.setText(selectedItem.getItemId() + "");
-                searchBoxItem.setItem(selectedItem);
+                itemPicker.setSelectedItem(item);
             } else {
                 textViewStock.setText("موجودی : -");
-                inputFieldStockId.setText("");
-                searchBoxItem.setItem(null);
+                itemPicker.setSelectedItem(null);
             }
             refreshLatestTrades();
         } catch (SQLException ex) {
@@ -429,30 +415,22 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     }
 
     private void setSelectedContact(Contact contact) {
-        this.selectedContact = contact;
-        if (contact != null) {
-            inputContact.setText(contact.getContactId() + "");
-        } else {
-            inputContact.setText("");
-        }
-        if (parentTabbedPanel != null) {
-            refreshTitle(parentTabbedPanel);
-        }
-        refreshLatestTrades();
+        contactPicker.setSelectedContact(contact);
+
     }
 
     private void refreshLatestTrades() {
         if (false == Invoice.isRefund(invoice.getOperationType())) {
             return;
         }
-        if (selectedContact == null || selectedItem == null) {
+        if (contactPicker.getSelectedContact() == null || itemPicker.getSelectedItem() == null) {
             inputAreaLogEditor.setText("");
             return;
         }
         try {
             CallableStatement pc = DatabaseManager.instance.prepareCall("CALL search_contact_item(?,? ,?)");
-            DatabaseManager.SetLong(pc, 1, selectedContact.getContactId());
-            DatabaseManager.SetLong(pc, 2, selectedItem.getItemId());
+            DatabaseManager.SetLong(pc, 1, contactPicker.getSelectedContact().getContactId());
+            DatabaseManager.SetLong(pc, 2, itemPicker.getSelectedItem().getItemId());
             if (invoice.getOperationType() == Invoice.TYPE_REFUND_BUY) {
                 DatabaseManager.SetInt(pc, 3, Invoice.TYPE_BUY);
             } else if (invoice.getOperationType() == Invoice.TYPE_REFUND_SELL) {
@@ -510,19 +488,17 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         inputFieldNumber1 = new ui.controls.input.InputFieldNumber();
         inputDate = new ui.controls.input.InputFieldDate();
         jSeparator1 = new javax.swing.JSeparator();
-        inputContact = new ui.controls.input.InputFieldNumber();
-        searchBoxContact = new ui.controls.input.SearchBox();
         jSeparator2 = new javax.swing.JSeparator();
-        searchBoxItem = new ui.controls.input.SearchBox();
         inputSuAmount = new ui.controls.input.InputFieldNumber();
         inputPrice = new ui.controls.input.InputFieldNumber();
         buttonInsert = new ui.controls.ImageButton();
         inputAreaLog = new javax.swing.JScrollPane();
         inputAreaLogEditor = new ui.controls.input.InputArea();
         textViewStock = new ui.controls.TextView();
-        inputFieldStockId = new ui.controls.input.InputFieldNumber();
         buttonDelete = new ui.controls.ImageButton();
         buttonCancel = new ui.controls.ImageButton();
+        itemPicker = new application.ui.ItemPicker();
+        contactPicker = new application.ui.ContactPicker();
         groupPaneInvoice = new ui.container.GroupPane();
         groupPaneTableHolder = new ui.container.GroupPane();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -574,7 +550,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPanePaymentLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(groupPanePaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(scroll1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                    .addComponent(scroll1, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                     .addComponent(textView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -631,17 +607,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        inputContact.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "کد مخاطب", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-        inputContact.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputContactActionPerformed(evt);
-            }
-        });
-
-        searchBoxContact.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "مشخصات مخاطب", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-
-        searchBoxItem.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-
         inputSuAmount.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "مقدار", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         inputPrice.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "قیمت جزء (خرید/فروش)", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -664,13 +629,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         textViewStock.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         textViewStock.setText("موجودی : -");
         textViewStock.setFont(new java.awt.Font("B yekan+", 0, 12)); // NOI18N
-
-        inputFieldStockId.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شناسه کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-        inputFieldStockId.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                inputFieldStockIdKeyPressed(evt);
-            }
-        });
 
         buttonDelete.setText("  حذف  ");
         buttonDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -696,10 +654,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                     .addComponent(inputAreaLog, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBodyLayout.createSequentialGroup()
-                        .addGap(0, 50, Short.MAX_VALUE)
-                        .addComponent(searchBoxContact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputContact, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(contactPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -715,16 +671,15 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                                 .addComponent(buttonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                                 .addComponent(textViewStock, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(paneBodyLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(inputSuAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchBoxItem, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inputFieldStockId, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(itemPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         paneBodyLayout.setVerticalGroup(
@@ -732,22 +687,22 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             .addGroup(paneBodyLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(inputContact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(searchBoxContact, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(inputFieldNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(inputDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(inputDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(contactPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inputSuAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchBoxItem, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inputFieldStockId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(inputSuAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(inputPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(paneBodyLayout.createSequentialGroup()
+                        .addComponent(itemPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textViewStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -803,7 +758,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitGroupMain, javax.swing.GroupLayout.DEFAULT_SIZE, 923, Short.MAX_VALUE)
+            .addComponent(splitGroupMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -822,17 +777,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private void pressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressButton1ActionPerformed
         addPaymentMethodEmpty();
     }//GEN-LAST:event_pressButton1ActionPerformed
-
-    private void inputFieldStockIdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldStockIdKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            findItemWithId();
-        }
-
-    }//GEN-LAST:event_inputFieldStockIdKeyPressed
-
-    private void inputContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputContactActionPerformed
-        setSelectedContactWithId();
-    }//GEN-LAST:event_inputContactActionPerformed
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
         removeSelectedDetailFromInvoice();
@@ -873,6 +817,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private ui.controls.ImageButton buttonDelete;
     private ui.controls.ImageButton buttonInsert;
     private ui.controls.ComboList comboListPaymentTypes;
+    private application.ui.ContactPicker contactPicker;
     private ui.container.GroupPane groupPane1;
     private ui.container.GroupPane groupPane2;
     private ui.container.GroupPane groupPane3;
@@ -883,13 +828,12 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private ui.container.GroupPane groupPaneTableHolder;
     private javax.swing.JScrollPane inputAreaLog;
     private ui.controls.input.InputArea inputAreaLogEditor;
-    private ui.controls.input.InputFieldNumber inputContact;
     private ui.controls.input.InputFieldDate inputDate;
     private ui.controls.input.InputFieldNumber inputFieldNumber1;
-    private ui.controls.input.InputFieldNumber inputFieldStockId;
     private ui.controls.input.InputFieldNumber inputPrice;
     private ui.controls.input.InputFieldNumber inputSuAmount;
     private javax.swing.JTable invoiceItemList;
+    private application.ui.ItemPicker itemPicker;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -898,39 +842,12 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private ui.container.GroupPane paymentMethodListUI;
     private ui.controls.PressButton pressButton1;
     private ui.container.Scroll scroll1;
-    private ui.controls.input.SearchBox searchBoxContact;
-    private ui.controls.input.SearchBox searchBoxItem;
     private ui.container.SplitGroup splitGroupMain;
     private ui.controls.TextView textView1;
     private ui.controls.TextView textViewInvoiceSummary;
     private ui.controls.TextView textViewStock;
     private ui.controls.TextView textViewTitle;
     // End of variables declaration//GEN-END:variables
-
-    private void findItemWithId() {
-        try {
-            Item item = Item.find(Long.parseLong(inputFieldStockId.getText()));
-            if (item == null) {
-                JOptionPane.showMessageDialog(this, "هیچ کالایی با این شناسه پیدا نشد.", "پیغام", JOptionPane.WARNING_MESSAGE);
-            } else {
-                setSelectedItem(item);
-            }
-        } catch (HeadlessException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "کد کالا را وارد کنید.", "پیغام", JOptionPane.WARNING_MESSAGE);
-
-        }
-    }
-
-    private void setSelectedContactWithId() {
-        try {
-            Contact find = Contact.find(Long.parseLong(inputContact.getText()));
-            if (find == null) {
-                JOptionPane.showMessageDialog(this, "هیچ مخاطبی با شناسه ی وارد شده یافت نشد.", "پیغام", JOptionPane.WARNING_MESSAGE);
-            }
-        } catch (Exception e) {
-
-        }
-    }
 
     private void removeSelectedDetailFromInvoice() {
         if (selectedDetail != null) {

@@ -8,7 +8,7 @@ package pricing.ui;
 import application.DatabaseManager;
 import application.NotificationManager;
 import entity.Item;
-import item.ui.ItemPickPanel;
+import application.ui.ItemPicker;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
@@ -72,7 +72,7 @@ public class PricingPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         groupPane1 = new ui.container.GroupPane();
-        itemPickPanel1 = new item.ui.ItemPickPanel();
+        itemPickPanel1 = new application.ui.ItemPicker();
         groupPane2 = new ui.container.GroupPane();
         pressButton1 = new ui.controls.PressButton();
         comboList1 = new ui.controls.ComboList();
@@ -214,7 +214,7 @@ public class PricingPanel extends javax.swing.JPanel {
     private ui.container.GroupPane groupPane2;
     private ui.controls.input.InputFieldDate inputFieldDate1;
     private ui.controls.input.InputFieldNumber inputFieldNumber1;
-    private item.ui.ItemPickPanel itemPickPanel1;
+    private application.ui.ItemPicker itemPickPanel1;
     private ui.controls.PressButton pressButton1;
     private ui.controls.PressButton pressButton2;
     private report.ui.ReportTable reportTable1;

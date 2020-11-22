@@ -13,7 +13,7 @@ import java.awt.Color;
  */
 public class AppTheme {
 
-    public static Color COLOR_MAIN = new Color(0, 128, 64);
+    public static Color COLOR_MAIN = new Color(131, 5, 58);
 
     public static Color COLOR_MAIN_2 = new Color(128, 255, 128);
 

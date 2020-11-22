@@ -7,8 +7,8 @@ package application;
 
 import entity.invoice.Invoice;
 import invoice.ui.InvoiceEditor;
-import item.ui.ContactEditor;
-import item.ui.ItemEditor;
+import application.ui.ContactEditor;
+import application.ui.ItemEditor;
 import java.awt.ComponentOrientation;
 import javax.swing.UIManager;
         

@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="splitGroupMain" alignment="0" pref="923" max="32767" attributes="0"/>
+          <Component id="splitGroupMain" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -50,7 +50,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="scroll1" pref="254" max="32767" attributes="0"/>
+                          <Component id="scroll1" pref="229" max="32767" attributes="0"/>
                           <Component id="textView1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -277,10 +277,8 @@
                                   <Component id="inputAreaLog" alignment="1" max="32767" attributes="0"/>
                                   <Component id="jSeparator2" alignment="1" max="32767" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace min="0" pref="50" max="32767" attributes="0"/>
-                                      <Component id="searchBoxContact" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="inputContact" min="-2" pref="85" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="contactPicker" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -297,17 +295,16 @@
                                               <Component id="buttonDelete" min="-2" pref="88" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="buttonCancel" min="-2" pref="88" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
+                                              <EmptySpace pref="122" max="32767" attributes="0"/>
                                               <Component id="textViewStock" min="-2" pref="200" max="-2" attributes="0"/>
                                           </Group>
-                                          <Group type="102" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                               <Component id="inputPrice" min="-2" pref="153" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="inputSuAmount" min="-2" pref="74" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="searchBoxItem" pref="162" max="32767" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="inputFieldStockId" min="-2" pref="116" max="-2" attributes="0"/>
+                                              <Component id="itemPicker" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -321,10 +318,6 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="inputContact" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="searchBoxContact" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
-                                  </Group>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
                                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
@@ -332,15 +325,20 @@
                                           <Component id="inputDate" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
+                                  <Component id="contactPicker" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="inputSuAmount" alignment="3" max="32767" attributes="0"/>
-                                  <Component id="inputPrice" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="searchBoxItem" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
-                                  <Component id="inputFieldStockId" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="inputSuAmount" alignment="3" max="32767" attributes="0"/>
+                                      <Component id="inputPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="itemPicker" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -381,37 +379,7 @@
                         <Property name="orientation" type="int" value="1"/>
                       </Properties>
                     </Component>
-                    <Component class="ui.controls.input.InputFieldNumber" name="inputContact">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder justification="3" title="&#x6a9;&#x62f; &#x645;&#x62e;&#x627;&#x637;&#x628;"/>
-                          </Border>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputContactActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="ui.controls.input.SearchBox" name="searchBoxContact">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder justification="3" title="&#x645;&#x634;&#x62e;&#x635;&#x627;&#x62a; &#x645;&#x62e;&#x627;&#x637;&#x628;"/>
-                          </Border>
-                        </Property>
-                      </Properties>
-                    </Component>
                     <Component class="javax.swing.JSeparator" name="jSeparator2">
-                    </Component>
-                    <Component class="ui.controls.input.SearchBox" name="searchBoxItem">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder justification="3" title="&#x6a9;&#x627;&#x644;&#x627;"/>
-                          </Border>
-                        </Property>
-                      </Properties>
                     </Component>
                     <Component class="ui.controls.input.InputFieldNumber" name="inputSuAmount">
                       <Properties>
@@ -471,18 +439,6 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="ui.controls.input.InputFieldNumber" name="inputFieldStockId">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder justification="3" title="&#x634;&#x646;&#x627;&#x633;&#x647; &#x6a9;&#x627;&#x644;&#x627;"/>
-                          </Border>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inputFieldStockIdKeyPressed"/>
-                      </Events>
-                    </Component>
                     <Component class="ui.controls.ImageButton" name="buttonDelete">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="  &#x62d;&#x630;&#x641;  "/>
@@ -498,6 +454,10 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCancelActionPerformed"/>
                       </Events>
+                    </Component>
+                    <Component class="application.ui.ItemPicker" name="itemPicker">
+                    </Component>
+                    <Component class="application.ui.ContactPicker" name="contactPicker">
                     </Component>
                   </SubComponents>
                 </Container>
