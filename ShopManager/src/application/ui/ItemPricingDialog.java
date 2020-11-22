@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package report.ui;
+package application.ui;
 
 import application.Application;
 
@@ -30,7 +30,7 @@ public class ItemPricingDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pricingPanel1 = new pricing.ui.PricingPanel();
+        pricingPanel1 = new application.ui.PricingPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -54,6 +54,6 @@ public class ItemPricingDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private pricing.ui.PricingPanel pricingPanel1;
+    private application.ui.PricingPanel pricingPanel1;
     // End of variables declaration//GEN-END:variables
 }

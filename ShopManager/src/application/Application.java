@@ -14,7 +14,7 @@ import java.awt.ComponentOrientation;
 import javax.swing.UIManager;
 
 import invoice.ui.InvoiceIdInputDialog;
-import report.ui.ItemPricingDialog;
+import application.ui.ItemPricingDialog;
 import report.ui.ReportPanelCustomerItemBill;
 import report.ui.ReportPanelPaymentBill;
 
