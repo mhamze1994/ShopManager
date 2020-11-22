@@ -241,7 +241,7 @@
             <Property name="alignment" type="int" value="2"/>
           </Layout>
           <SubComponents>
-            <Component class="ui.controls.ImageButton" name="buttonBuy2">
+            <Component class="ui.controls.ImageButton" name="buttonReportContactItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x645;&#x634;&#x62a;&#x631;&#x6cc; / &#x6a9;&#x627;&#x644;&#x627;"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -252,10 +252,10 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonBuy2MousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonReportContactItemMousePressed"/>
               </Events>
             </Component>
-            <Component class="ui.controls.ImageButton" name="buttonBuy1">
+            <Component class="ui.controls.ImageButton" name="buttonReportPayment">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x635;&#x648;&#x631;&#x62a;&#x62d;&#x633;&#x627;&#x628;"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -269,7 +269,7 @@
                 <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="button2"/>
               </AccessibilityProperties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonBuy1MousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonReportPaymentMousePressed"/>
               </Events>
             </Component>
           </SubComponents>

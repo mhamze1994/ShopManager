@@ -15,7 +15,7 @@ public class AppTheme {
 
     public static Color COLOR_MAIN = new Color(57, 81, 243);
 
-    public static Color COLOR_MAIN_2 = new Color(128, 255, 128);
+    public static Color COLOR_MAIN_2 = new Color(164, 230, 251);
 
     public static Color COLOR_TEXT_DEFAULT = new Color(90, 90, 90);
 

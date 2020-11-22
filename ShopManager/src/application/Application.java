@@ -17,6 +17,8 @@ import invoice.ui.InvoiceIdInputDialog;
 import application.ui.ItemPricingDialog;
 import report.ui.ReportPanelCustomerItemBill;
 import report.ui.ReportPanelPaymentBill;
+import ui.AppResource;
+import ui.AppTheme;
 
 /**
  *
@@ -36,6 +38,22 @@ public class Application extends javax.swing.JFrame {
         tabbedContainer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         tabbedContainer.setClosable(true);
 
+        buttonPriceAnnounce.setImage(AppResource.getImage(AppResource.ICON_PRICE_TAG , AppTheme.COLOR_MAIN));
+        
+        buttonBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_BUY , AppTheme.COLOR_MAIN));
+        buttonRefundBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_BUY_REFUND , AppTheme.COLOR_MAIN));
+        buttonSell.setImage(AppResource.getImage(AppResource.ICON_BILL_SELL , AppTheme.COLOR_MAIN));
+        ButtonRefundSell.setImage(AppResource.getImage(AppResource.ICON_BILL_SELL_REFUND , AppTheme.COLOR_MAIN));
+        buttonEditBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_EDIT , AppTheme.COLOR_MAIN));
+        buttonDefineItem.setImage(AppResource.getImage(AppResource.ICON_STOCK , AppTheme.COLOR_MAIN));
+        
+        buttonContacts.setImage(AppResource.getImage(AppResource.ICON_CONTACT , AppTheme.COLOR_MAIN));
+        
+        buttonReportPayment.setImage(AppResource.getImage(AppResource.ICON_REPORT_1 , AppTheme.COLOR_MAIN));
+        buttonReportContactItem.setImage(AppResource.getImage(AppResource.ICON_REPORT_2 , AppTheme.COLOR_MAIN));
+        
+        buttonUser.setVisible(false);
+        
         instance = this;
     }
 
@@ -63,8 +81,8 @@ public class Application extends javax.swing.JFrame {
         buttonRefundBuy = new ui.controls.ImageButton();
         buttonBuy = new ui.controls.ImageButton();
         panelReports = new ui.container.GroupPane();
-        buttonBuy2 = new ui.controls.ImageButton();
-        buttonBuy1 = new ui.controls.ImageButton();
+        buttonReportContactItem = new ui.controls.ImageButton();
+        buttonReportPayment = new ui.controls.ImageButton();
         mainPanel = new ui.container.GroupPane();
         tabbedContainer = new ui.container.TabbedContainer();
 
@@ -181,26 +199,26 @@ public class Application extends javax.swing.JFrame {
 
         panelReports.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        buttonBuy2.setText("مشتری / کالا");
-        buttonBuy2.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
-        buttonBuy2.setPreferredSize(new java.awt.Dimension(70, 70));
-        buttonBuy2.addMouseListener(new java.awt.event.MouseAdapter() {
+        buttonReportContactItem.setText("مشتری / کالا");
+        buttonReportContactItem.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonReportContactItem.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonReportContactItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                buttonBuy2MousePressed(evt);
+                buttonReportContactItemMousePressed(evt);
             }
         });
-        panelReports.add(buttonBuy2);
+        panelReports.add(buttonReportContactItem);
 
-        buttonBuy1.setText("صورتحساب");
-        buttonBuy1.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
-        buttonBuy1.setPreferredSize(new java.awt.Dimension(70, 70));
-        buttonBuy1.addMouseListener(new java.awt.event.MouseAdapter() {
+        buttonReportPayment.setText("صورتحساب");
+        buttonReportPayment.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonReportPayment.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonReportPayment.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                buttonBuy1MousePressed(evt);
+                buttonReportPaymentMousePressed(evt);
             }
         });
-        panelReports.add(buttonBuy1);
-        buttonBuy1.getAccessibleContext().setAccessibleName("button2");
+        panelReports.add(buttonReportPayment);
+        buttonReportPayment.getAccessibleContext().setAccessibleName("button2");
 
         tabbedContainerHeader.addTab("گزارشات", panelReports);
 
@@ -244,13 +262,13 @@ public class Application extends javax.swing.JFrame {
         openInvoiceForEditing();
     }//GEN-LAST:event_buttonEditBuyMousePressed
 
-    private void buttonBuy2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonBuy2MousePressed
+    private void buttonReportContactItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonReportContactItemMousePressed
         openContactItemBillPanel();
-    }//GEN-LAST:event_buttonBuy2MousePressed
+    }//GEN-LAST:event_buttonReportContactItemMousePressed
 
-    private void buttonBuy1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonBuy1MousePressed
+    private void buttonReportPaymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonReportPaymentMousePressed
         openPaymentBillPanel();
-    }//GEN-LAST:event_buttonBuy1MousePressed
+    }//GEN-LAST:event_buttonReportPaymentMousePressed
 
     private void buttonPriceAnnounceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonPriceAnnounceMousePressed
         ItemPricingDialog.open();
@@ -354,13 +372,13 @@ public class Application extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ui.controls.ImageButton ButtonRefundSell;
     private ui.controls.ImageButton buttonBuy;
-    private ui.controls.ImageButton buttonBuy1;
-    private ui.controls.ImageButton buttonBuy2;
     private ui.controls.ImageButton buttonContacts;
     private ui.controls.ImageButton buttonDefineItem;
     private ui.controls.ImageButton buttonEditBuy;
     private ui.controls.ImageButton buttonPriceAnnounce;
     private ui.controls.ImageButton buttonRefundBuy;
+    private ui.controls.ImageButton buttonReportContactItem;
+    private ui.controls.ImageButton buttonReportPayment;
     private ui.controls.ImageButton buttonSell;
     private ui.controls.ImageButton buttonUser;
     private javax.swing.JSeparator jSeparator1;

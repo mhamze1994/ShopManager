@@ -33,6 +33,15 @@ public class AppResource {
     public static final String ICON_CONTACT = "/ui/res/contact.png";
     public static final String ICON_BOX = "/ui/res/box.png";
     public static final String ICON_INVOICE_EDIT = "/ui/res/invoice_edit.png";
+    public static final String ICON_PRICE_TAG = "/ui/res/price_tag.png";
+    public static final String ICON_BILL_BUY = "/ui/res/bill.png";
+    public static final String ICON_BILL_BUY_REFUND = "/ui/res/bill_refund.png";
+    public static final String ICON_BILL_SELL = "/ui/res/sell.png";
+    public static final String ICON_BILL_SELL_REFUND = "/ui/res/sell_refund.png";
+    public static final String ICON_BILL_EDIT = "/ui/res/edit.png";
+    public static final String ICON_STOCK = "/ui/res/stock.png";
+    public static final String ICON_REPORT_1 = "/ui/res/report_1.png";
+    public static final String ICON_REPORT_2 = "/ui/res/report_2.png";
 
     public static BufferedImage getImage(String path) {
         return getImage(path, null);
