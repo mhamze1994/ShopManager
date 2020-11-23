@@ -5,7 +5,6 @@
  */
 package application.ui;
 
-import application.NotificationManager;
 import entity.Item;
 import java.awt.event.KeyEvent;
 import ui.container.GroupPane;

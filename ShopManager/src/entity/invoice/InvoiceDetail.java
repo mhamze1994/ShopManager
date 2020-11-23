@@ -7,11 +7,14 @@ package entity.invoice;
 
 import entity.Item;
 import application.Calculator;
+import application.DatabaseManager;
 import application.JalaliCalendar;
 import entity.AbstractEntity;
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,8 +22,26 @@ import java.sql.SQLException;
  */
 public class InvoiceDetail {
 
-    // <editor-fold defaultstate="collapsed" desc="Database columns of invoicedetail table">   
-    //`detailId`, `date`, `contactId`, `operationType`, `itemId`, `suAmount`, `suPrice`, `refDetailId`, invoiceid
+    public static ArrayList<InvoiceDetail> getLatestTrades(long contactId, long itemId, int refundType) throws SQLException {
+        ArrayList<InvoiceDetail> latestDetails = new ArrayList<>();
+
+        CallableStatement pc = DatabaseManager.instance.prepareCall("CALL search_latest_contact_item_details(? , ? ,?)");
+        DatabaseManager.SetLong(pc, 1, contactId);
+        DatabaseManager.SetLong(pc, 2, itemId);
+        DatabaseManager.SetInt(pc, 3, refundType);
+        ResultSet rs = pc.executeQuery();
+        while (rs.next()) {
+            InvoiceDetail detail = new InvoiceDetail();
+            detail.readResultSet(rs);
+            latestDetails.add(detail);
+        }
+
+        return latestDetails;
+    }
+
+    
+// <editor-fold defaultstate="collapsed" desc="Database columns of invoicedetail table">   
+//`detailId`, `date`, `contactId`, `operationType`, `itemId`, `suAmount`, `suPrice`, `refDetailId`, invoiceid
     private long detailId;
     private long date;
     private long contactId;
@@ -124,7 +145,7 @@ public class InvoiceDetail {
     }
 
     public Item getItem() {
-        if (item == null){
+        if (item == null) {
             item = Item.find(itemId);
         }
         return item;

@@ -8,6 +8,7 @@ package invoice.ui;
 import application.Calculator;
 import entity.Contact;
 import application.DatabaseManager;
+import application.ItemPrice;
 import entity.Item;
 import entity.invoice.Invoice;
 import entity.invoice.InvoiceDetail;
@@ -18,7 +19,6 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
-import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
@@ -51,7 +50,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     private Invoice invoice;
 
-//    private Contact selectedContact;
     private InvoiceDetail selectedDetail;
 
     private String[] paymentTypes = {"POS", "صندوق"};
@@ -61,9 +59,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
      * Creates new form InvoiceEditor
      */
     public InvoiceEditor() {
-//        Invoice invoice = new Invoice();
-//        invoice.setOperationType(Invoice.TYPE_BUY);
-//        init(invoice);
+
     }
 
     public InvoiceEditor(Invoice invoice) {
@@ -118,7 +114,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         itemPicker.setOnPick((Item item) -> {
             refreshLatestTrades();
             fillItemPrices(item);
-            inputSuAmount.requestFocusInWindow();
         });
 
         refreshLatestTrades();
@@ -443,26 +438,27 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             return;
         }
         try {
-            CallableStatement pc = DatabaseManager.instance.prepareCall("CALL search_contact_item(?,? ,?)");
-            DatabaseManager.SetLong(pc, 1, contactPicker.getSelectedContact().getContactId());
-            DatabaseManager.SetLong(pc, 2, itemPicker.getSelectedItem().getItemId());
+            int refundType = -1;
             if (invoice.getOperationType() == Invoice.TYPE_REFUND_BUY) {
-                DatabaseManager.SetInt(pc, 3, Invoice.TYPE_BUY);
+                refundType = Invoice.TYPE_BUY;
             } else if (invoice.getOperationType() == Invoice.TYPE_REFUND_SELL) {
-                DatabaseManager.SetInt(pc, 3, Invoice.TYPE_SELL);
+                refundType = Invoice.TYPE_SELL;
             }
-            ResultSet rs = pc.executeQuery();
+
+            ArrayList<InvoiceDetail> latestDetails = InvoiceDetail.getLatestTrades(
+                    contactPicker.getSelectedContact().getContactId(),
+                    itemPicker.getSelectedItem().getItemId(),
+                    refundType
+            );
+
             StringBuilder logText = new StringBuilder();
             logText.append(invoice.getOperationType() == Invoice.TYPE_REFUND_SELL ? "فروش های اخیر" : "خرید های اخیر")
                     .append(System.lineSeparator()).append(System.lineSeparator());
-            int count = 0;
-            while (rs.next()) {
-                count++;
-                InvoiceDetail detail = new InvoiceDetail();
-                detail.readResultSet(rs);
-                logText.append("- ").append(detail.getSummary()).append(System.lineSeparator()).append(System.lineSeparator());
+
+            for (InvoiceDetail invoiceDetail : latestDetails) {
+                logText.append("- ").append(invoiceDetail.getSummary()).append(System.lineSeparator()).append(System.lineSeparator());
             }
-            if (count == 0) {
+            if (latestDetails.isEmpty()) {
                 logText.append("هیچ فاکتوری موجود نیست!");
             }
             inputAreaLogEditor.setText(logText.toString());
@@ -871,22 +867,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             return;
         }
         try {
-            String sql = "select * from item_price ip where item_id = ? order by `date` desc";
-            try (PreparedStatement ps = DatabaseManager.instance.PrepareStatement(sql, Statement.NO_GENERATED_KEYS)) {
-                ps.setLong(1, item.getItemId());
-                try (ResultSet rs = ps.executeQuery()) {
-                    ArrayList<ItemPrice> itemPrices = new ArrayList<>();
-                    while (rs.next()) {
-                        ItemPrice ip = new ItemPrice();
-                        ip.readResultSet(rs);
-                        if (itemPrices.contains(ip) == false) {
-                            itemPrices.add(ip);
-                        }
-                    }
-                    comboListPrice.setModel(new DefaultComboBoxModel<>(itemPrices.toArray()));
-                    comboListPrice.setRenderer(new DefaultPriceListRenderer());
-                }
-            }
+            ArrayList<ItemPrice> prices = ItemPrice.listPrices(item.getItemId());
+            comboListPrice.setModel(new DefaultComboBoxModel<>(prices.toArray()));
+            comboListPrice.setRenderer(new DefaultPriceListRenderer());
         } catch (SQLException ex) {
             Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -910,59 +893,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             tv.setForeground(isSelected ? AppTheme.COLOR_WHITE : AppTheme.COLOR_GRAY);
             return tv;
         }
-    }
-
-    private class ItemPrice {
-
-        private long id;
-        private int priceType;
-        private long date;
-        private long itemId;
-        private BigDecimal price;
-
-        public void readResultSet(ResultSet rs) throws SQLException {
-            int pIndex = 1;
-            id = rs.getLong(pIndex++);
-            priceType = rs.getInt(pIndex++);
-            date = rs.getLong(pIndex++);
-            itemId = rs.getLong(pIndex++);
-            price = rs.getBigDecimal(pIndex++);
-        }
-
-        public String description() {
-            return "سطح " + priceType + " : " + toString();
-        }
-
-        @Override
-        public String toString() {
-            return price.stripTrailingZeros().toPlainString();
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 3;
-            hash = 11 * hash + (int) (this.id ^ (this.id >>> 32));
-            return hash;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final ItemPrice other = (ItemPrice) obj;
-            if (this.priceType != other.priceType) {
-                return false;
-            }
-            return true;
-        }
-
     }
 
 }

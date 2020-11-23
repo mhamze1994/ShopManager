@@ -89,35 +89,6 @@ public class ContactEditor extends GroupPane {
         createNew();
     }
 
-    private ThreadUserInput threadUserInput;
-
-    public class ThreadUserInput extends Thread {
-
-        public long timer = 500;
-
-        @Override
-        public void run() {
-            try {
-                synchronized (this) {
-                    while (true) {
-                        Thread.sleep(100);
-                        timer -= 100;
-                        if (timer <= 0) {
-                            notify();
-                            wait();
-                        }
-                    }
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ContactEditor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        private void resetTimer() {
-            timer = 500;
-        }
-    }
-
     private void loadContacts(String pattern) {
         try {
             content.removeAll();

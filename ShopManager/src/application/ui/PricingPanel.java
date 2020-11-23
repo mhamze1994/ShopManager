@@ -6,7 +6,6 @@
 package application.ui;
 
 import application.DatabaseManager;
-import application.NotificationManager;
 import entity.Item;
 import application.ui.ItemPicker;
 import java.math.BigDecimal;

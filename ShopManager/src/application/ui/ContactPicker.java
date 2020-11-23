@@ -5,7 +5,6 @@
  */
 package application.ui;
 
-import application.NotificationManager;
 import entity.Contact;
 import entity.invoice.Invoice;
 import java.awt.event.KeyEvent;

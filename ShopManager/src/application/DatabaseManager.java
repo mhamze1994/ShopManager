@@ -54,27 +54,6 @@ public abstract class DatabaseManager {
         return null;
     }
 
-//    public <T extends AbstractEntity> ArrayList<T> SelectAll(String tableName, Class<T> type) {
-//        return SelectAll(tableName, type, null);
-//    }
-//
-//    /**
-//     * Returns null if found nothing
-//     *
-//     * @param <T>
-//     * @param tableName
-//     * @param type
-//     * @param condition
-//     * @return
-//     */
-//    public <T extends AbstractEntity> T SelectUnique(String tableName, Class<T> type, String condition) {
-//        ArrayList<T> all = SelectAll(tableName, type, condition);
-//        if (all.size() == 1) {
-//            return all.get(0);
-//        } else {
-//            return null;
-//        }
-//    }
     public boolean Delete(String tableName, String condition) {
         try {
             try (Statement stmt = conn.createStatement()) {
@@ -126,16 +105,6 @@ public abstract class DatabaseManager {
         return null;
     }
 
-    /**
-     * Insert stuff and return generated primary key
-     *
-     * @param ps
-     * @return
-     * @throws SQLException
-     */
-//    public abstract long Insert(PreparedStatement ps) throws SQLException;
-//    public abstract boolean Update(PreparedStatement ps) throws SQLException;
-//    public abstract <T extends AbstractEntity> ArrayList<T> SelectAll(String tableName, Class<T> type, String condition);
     protected abstract String GetUsername();
 
     protected abstract String GetPassword();

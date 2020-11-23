@@ -6,7 +6,7 @@
 package ui.controls.input;
 
 import application.DatabaseManager;
-import application.SearchBoxQueryModel;
+import application.QueryDataModel;
 import entity.AbstractEntity;
 import invoice.ui.InvoiceEditor;
 import java.awt.Color;
@@ -148,7 +148,7 @@ public final class SearchBox extends ComboList {
     }
 
     public static <T extends AbstractEntity> void setupSearchbox(Class clazz, SearchBox searchBox, String callStatement, SearchBox.OnValueChange onValueChange) {
-        SearchBoxQueryModel<T> queryModel = new SearchBoxQueryModel(clazz);
+        QueryDataModel<T> queryModel = new QueryDataModel(clazz);
         searchBox.setModel(queryModel);
         searchBox.setOnValueChange(onValueChange);
 

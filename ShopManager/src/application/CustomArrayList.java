@@ -6,6 +6,8 @@
 package application;
 
 /**
+ * The custom array list is implemented in such a way that clear function will
+ * have time complexity of O(1).
  *
  * @author PersianDevStudio
  * @param <T>
