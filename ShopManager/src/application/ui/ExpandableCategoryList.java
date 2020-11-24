@@ -60,9 +60,6 @@ public class ExpandableCategoryList extends javax.swing.JPanel {
     public void addItem(Item item) {
         itemListModel.addElement(item);
 
-//        itemsPane.add(btn);
-//        itemsPane.revalidate();
-//        itemsPane.repaint();
     }
 
     /**

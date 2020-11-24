@@ -7,12 +7,11 @@ package application.ui;
 
 import application.DatabaseManager;
 import entity.Item;
-import application.ui.ItemPicker;
+import invoice.ui.CustomFocusTraversalPolicy;
+import java.awt.Component;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import report.ReportItemPricing;
@@ -40,6 +39,15 @@ public class PricingPanel extends javax.swing.JPanel {
     public PricingPanel() {
         initComponents();
 
+        ArrayList<Component> uiComponentOrder = new ArrayList<>();
+        uiComponentOrder.add(itemPickPanel1.getSearchField());
+        uiComponentOrder.add(inputFieldNumber1);
+        uiComponentOrder.add(inputFieldDate1);
+        uiComponentOrder.add(comboList1);
+        uiComponentOrder.add(pressButton1);
+        groupPane1.setFocusCycleRoot(true);
+        groupPane1.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(uiComponentOrder));
+
         pressButton1.setTextHorizontalPosition(PressButton.POSITION_CENTER);
         pressButton2.setTextHorizontalPosition(PressButton.POSITION_CENTER);
 
@@ -52,7 +60,7 @@ public class PricingPanel extends javax.swing.JPanel {
         reportTable1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         reportTable1.setNotificationEnabled(false);
-        
+
         itemPickPanel1.setOnPick((Item item) -> {
             if (item != null) {
                 reportItemPricing.setItemId(item.getItemId());
@@ -180,7 +188,7 @@ public class PricingPanel extends javax.swing.JPanel {
             DatabaseManager.SetBoolean(call, 5, isDelete);
             call.execute();
             call.close();
-            
+
             reportTable1.apply();
 
         } catch (Exception ex) {

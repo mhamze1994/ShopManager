@@ -112,8 +112,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             refreshLatestTrades();
         });
         itemPicker.setOnPick((Item item) -> {
-            refreshLatestTrades();
-            fillItemPrices(item);
+            setSelectedItem(item);
+//            refreshLatestTrades();
+//            fillItemPrices(item);
         });
 
         refreshLatestTrades();
@@ -410,10 +411,10 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         try {
             if (item != null) {
                 textViewStock.setText("موجودی : " + item.fetchItemStock().stripTrailingZeros().toPlainString());
-                itemPicker.setSelectedItem(item);
+//                itemPicker.setSelectedItem(item);
             } else {
                 textViewStock.setText("موجودی : -");
-                itemPicker.setSelectedItem(null);
+//                itemPicker.setSelectedItem(null);
             }
             refreshLatestTrades();
 

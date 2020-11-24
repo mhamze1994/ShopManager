@@ -129,7 +129,7 @@ public class ContactEditor extends GroupPane {
         try {
 
             contact.setName(inputName.getText());
-            contact.setFathername(inputName.getText());
+            contact.setFathername(inputFathername.getText());
             contact.setLastname(inputLastname.getText());
 
             if (inputNationalId.getText().isEmpty()) {

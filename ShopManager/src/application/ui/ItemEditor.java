@@ -11,9 +11,12 @@ import entity.Item;
 import entity.ItemCategory;
 import entity.Unit;
 import application.Calculator;
+import invoice.ui.CustomFocusTraversalPolicy;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.HeadlessException;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -58,6 +61,20 @@ public class ItemEditor extends javax.swing.JPanel {
     private void init() {
         initComponents();
 
+        ArrayList<Component> uiComponentOrder = new ArrayList<>();
+        uiComponentOrder.add(inputDescription);
+        uiComponentOrder.add(comboListCategory);
+        uiComponentOrder.add(inputUnit1);
+        uiComponentOrder.add(inputRatio1);
+        uiComponentOrder.add(inputUnit2);
+        uiComponentOrder.add(pressButton1);
+        groupPane1.setFocusCycleRoot(true);
+        groupPane1.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(uiComponentOrder));
+
+        java.awt.EventQueue.invokeLater(() -> {
+            inputDescription.requestFocusInWindow();
+        });
+
         pressButton1.setTextHorizontalPosition(PressButton.POSITION_CENTER);
         pressButton2.setTextHorizontalPosition(PressButton.POSITION_CENTER);
         pressButton3.setTextHorizontalPosition(PressButton.POSITION_CENTER);
@@ -83,6 +100,7 @@ public class ItemEditor extends javax.swing.JPanel {
                     cat.setCategoryParentId(rs.getLong("categoryParentId"));
                     cat.setDescription(rs.getString("description"));
                     itemCategories.add(cat);
+                    createNewCategoryUI(cat);
                 }
             }
 
@@ -167,7 +185,7 @@ public class ItemEditor extends javax.swing.JPanel {
 
         splitGroup1 = new ui.container.SplitGroup();
         groupPane1 = new ui.container.GroupPane();
-        groupPane3 = new ui.container.GroupPane();
+        groupPaneInput = new ui.container.GroupPane();
         inputDescription = new ui.controls.input.InputField();
         inputUnit1 = new ui.controls.ComboList();
         inputRatio1 = new ui.controls.input.InputFieldNumber();
@@ -195,7 +213,7 @@ public class ItemEditor extends javax.swing.JPanel {
 
         groupPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        groupPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "تعریف", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        groupPaneInput.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "تعریف", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         inputDescription.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شرح کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
@@ -212,18 +230,18 @@ public class ItemEditor extends javax.swing.JPanel {
         inputFieldNumber1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شناسه کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         inputFieldNumber1.setOpaque(false);
 
-        javax.swing.GroupLayout groupPane3Layout = new javax.swing.GroupLayout(groupPane3);
-        groupPane3.setLayout(groupPane3Layout);
-        groupPane3Layout.setHorizontalGroup(
-            groupPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(groupPane3Layout.createSequentialGroup()
+        javax.swing.GroupLayout groupPaneInputLayout = new javax.swing.GroupLayout(groupPaneInput);
+        groupPaneInput.setLayout(groupPaneInputLayout);
+        groupPaneInputLayout.setHorizontalGroup(
+            groupPaneInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(groupPaneInputLayout.createSequentialGroup()
                 .addComponent(comboListCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPane3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPaneInputLayout.createSequentialGroup()
                 .addGap(0, 104, Short.MAX_VALUE)
-                .addGroup(groupPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPane3Layout.createSequentialGroup()
+                .addGroup(groupPaneInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupPaneInputLayout.createSequentialGroup()
                         .addComponent(inputUnit2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inputRatio1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -231,16 +249,16 @@ public class ItemEditor extends javax.swing.JPanel {
                         .addComponent(inputUnit1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(inputFieldNumber1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
-        groupPane3Layout.setVerticalGroup(
-            groupPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(groupPane3Layout.createSequentialGroup()
+        groupPaneInputLayout.setVerticalGroup(
+            groupPaneInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(groupPaneInputLayout.createSequentialGroup()
                 .addComponent(inputFieldNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(groupPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(groupPaneInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboListCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(groupPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(groupPaneInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputUnit1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(inputRatio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(inputUnit2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -275,7 +293,7 @@ public class ItemEditor extends javax.swing.JPanel {
             .addGroup(groupPane1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(groupPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(groupPaneInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(groupPane1Layout.createSequentialGroup()
                         .addGap(4, 4, 4)
                         .addComponent(pressButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,7 +307,7 @@ public class ItemEditor extends javax.swing.JPanel {
             groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(groupPane1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(groupPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(groupPaneInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addGroup(groupPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pressButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,6 +334,11 @@ public class ItemEditor extends javax.swing.JPanel {
 
         inputFieldCategoryDescription.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شرح", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         inputFieldCategoryDescription.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        inputFieldCategoryDescription.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inputFieldCategoryDescriptionKeyPressed(evt);
+            }
+        });
         groupPane2.add(inputFieldCategoryDescription, java.awt.BorderLayout.CENTER);
 
         pressButton4.setText("ثبت گروه جدید");
@@ -360,6 +383,12 @@ public class ItemEditor extends javax.swing.JPanel {
     private void pressButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressButton4ActionPerformed
         insertNewCategory();
     }//GEN-LAST:event_pressButton4ActionPerformed
+
+    private void inputFieldCategoryDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldCategoryDescriptionKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            insertNewCategory();
+        }
+    }//GEN-LAST:event_inputFieldCategoryDescriptionKeyPressed
 
     private boolean inputIsValid() {
         boolean isValid = true;
@@ -476,7 +505,7 @@ public class ItemEditor extends javax.swing.JPanel {
         } else {
             inputFieldNumber1.setText("");
             inputDescription.setText("");
-            comboListCategory.setSelectedItem(null);
+//            comboListCategory.setSelectedItem(null);
             inputUnit1.setSelectedItem(null);
             inputRatio1.setText("");
             inputUnit2.setSelectedItem(null);
@@ -489,10 +518,10 @@ public class ItemEditor extends javax.swing.JPanel {
     private ui.controls.ComboList comboListCategory;
     private ui.container.GroupPane groupPane1;
     private ui.container.GroupPane groupPane2;
-    private ui.container.GroupPane groupPane3;
     private ui.container.GroupPane groupPane4;
     private ui.container.GroupPane groupPane5;
     private ui.container.GroupPane groupPane6;
+    private ui.container.GroupPane groupPaneInput;
     private ui.controls.input.InputField inputDescription;
     private ui.controls.input.InputField inputFieldCategoryDescription;
     private ui.controls.input.InputFieldNumber inputFieldNumber1;
@@ -548,12 +577,12 @@ public class ItemEditor extends javax.swing.JPanel {
                 setSelectedItem(lv_catUI.getjListItem().getSelectedValue());
             }
         });
-//        CategoryExpandable catUI = lv_catUI;
+
         allCats.put(category.getCategoryId(), lv_catUI);
         catalogPanel.add(lv_catUI);
         catalogPanel.revalidate();
         catalogPanel.repaint();
-        
+
         lv_catUI.setUpdateListener(() -> {
             findCategory(category.getCategoryId()).setDescription(lv_catUI.itemCategory.getDescription());
             refreshCategoryList();
@@ -572,12 +601,13 @@ public class ItemEditor extends javax.swing.JPanel {
         cat.setDescription(description);
 
         try {
-            
+
             cat.save();
             createNewCategoryUI(cat);
             itemCategories.add(cat);
             refreshCategoryList();
-
+            inputFieldCategoryDescription.setText("");
+            inputFieldCategoryDescription.requestFocusInWindow();
         } catch (SQLException ex) {
             showError(ex.toString());
         }
