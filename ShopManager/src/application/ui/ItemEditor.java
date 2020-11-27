@@ -17,14 +17,16 @@ import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale.Category;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -70,6 +72,8 @@ public class ItemEditor extends javax.swing.JPanel {
         uiComponentOrder.add(pressButton1);
         groupPane1.setFocusCycleRoot(true);
         groupPane1.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(uiComponentOrder));
+
+        inputFieldFilter.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
         java.awt.EventQueue.invokeLater(() -> {
             inputDescription.requestFocusInWindow();
@@ -125,8 +129,21 @@ public class ItemEditor extends javax.swing.JPanel {
 
         resetInputFields();
 
+        applyFilter("");
+
+    }
+
+    private void applyFilter(String filter) {
+
+        for (Map.Entry<Long, ExpandableCategoryList> entry : allCats.entrySet()) {
+            ExpandableCategoryList categoryUI = entry.getValue();
+            categoryUI.clearData();
+            categoryUI.setVisible(false);
+        }
+
         try {
-            CallableStatement call = DatabaseManager.instance.prepareCall("CALL select_catalog()");
+            CallableStatement call = DatabaseManager.instance.prepareCall("CALL select_catalog(?)");
+            DatabaseManager.SetString(call, 1, filter.trim());
             ResultSet rs = call.executeQuery();
             while (rs.next()) {
                 //out : itemid , `categoryId` , itemDesc , unit1 , ratio1 , unit2 , catDesc 
@@ -150,6 +167,16 @@ public class ItemEditor extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(ItemEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<Long, ExpandableCategoryList> entry : allCats.entrySet()) {
+                    ExpandableCategoryList categoryUI = entry.getValue();
+                    categoryUI.setVisible(filter.trim().isEmpty() ? true : categoryUI.itemCount() != 0);
+                }
+            }
+        });
     }
 
     private void refreshCategoryList() {
@@ -203,6 +230,7 @@ public class ItemEditor extends javax.swing.JPanel {
         pressButton4 = new ui.controls.PressButton();
         groupPane5 = new ui.container.GroupPane();
         catalogPanel = new ui.container.GroupPane();
+        inputFieldFilter = new ui.controls.input.InputField();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(650, 352));
@@ -363,6 +391,14 @@ public class ItemEditor extends javax.swing.JPanel {
 
         groupPane4.add(scroll1, java.awt.BorderLayout.CENTER);
 
+        inputFieldFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "فیلتر", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        inputFieldFilter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inputFieldFilterKeyPressed(evt);
+            }
+        });
+        groupPane4.add(inputFieldFilter, java.awt.BorderLayout.PAGE_START);
+
         splitGroup1.setLeftComponent(groupPane4);
 
         add(splitGroup1, "card2");
@@ -377,7 +413,7 @@ public class ItemEditor extends javax.swing.JPanel {
     }//GEN-LAST:event_pressButton2ActionPerformed
 
     private void pressButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressButton3ActionPerformed
-        setSelectedItem(null);
+        setSelectedItem(null, null);
     }//GEN-LAST:event_pressButton3ActionPerformed
 
     private void pressButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressButton4ActionPerformed
@@ -389,6 +425,12 @@ public class ItemEditor extends javax.swing.JPanel {
             insertNewCategory();
         }
     }//GEN-LAST:event_inputFieldCategoryDescriptionKeyPressed
+
+    private void inputFieldFilterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldFilterKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            applyFilter(inputFieldFilter.getText());
+        }
+    }//GEN-LAST:event_inputFieldFilterKeyPressed
 
     private boolean inputIsValid() {
         boolean isValid = true;
@@ -413,16 +455,20 @@ public class ItemEditor extends javax.swing.JPanel {
         }
 
         try {
-            if (inputUnit2.getSelectedItem() != null) {
-                BigDecimal bigDecimal = new BigDecimal(inputRatio1.getText());
-                if (Calculator.isLessOrEqual(bigDecimal, BigDecimal.ZERO)) {
-                    isValid = false;
-                    errorLog.append("ضریب باید رقمی بزرگتر از صفر باشد. -").append(System.lineSeparator());
-                }
+            BigDecimal bigDecimal = new BigDecimal(inputRatio1.getText());
+            if (Calculator.isLessOrEqual(bigDecimal, BigDecimal.ZERO)) {
+                isValid = false;
+                errorLog.append("ضریب باید رقمی بزرگتر از صفر باشد. -").append(System.lineSeparator());
+            }
+            if (inputUnit2.getSelectedItem() == null) {
+                isValid = false;
+                errorLog.append("ورودی واحد دوم را نیز پر کنید.").append(System.lineSeparator());
             }
         } catch (Exception e) {
-            isValid = false;
-            errorLog.append("ورودی ضریب نادرست است. -").append(System.lineSeparator());
+            if (inputUnit2.getSelectedItem() != null) {
+                isValid = false;
+                errorLog.append("ورودی ضریب نادرست است. -").append(System.lineSeparator());
+            }
         }
 
         if (isValid == false) {
@@ -477,7 +523,7 @@ public class ItemEditor extends javax.swing.JPanel {
                 allCats.get(item.getCategoryId()).refresh();
             }
 
-            setSelectedItem(null);
+            setSelectedItem(null, null);
         } catch (Exception ex) {
             Logger.getLogger(ItemEditor.class.getName()).log(Level.SEVERE, null, ex);
             showError(ex.toString());
@@ -524,6 +570,7 @@ public class ItemEditor extends javax.swing.JPanel {
     private ui.container.GroupPane groupPaneInput;
     private ui.controls.input.InputField inputDescription;
     private ui.controls.input.InputField inputFieldCategoryDescription;
+    private ui.controls.input.InputField inputFieldFilter;
     private ui.controls.input.InputFieldNumber inputFieldNumber1;
     private ui.controls.input.InputFieldNumber inputRatio1;
     private ui.controls.ComboList inputUnit1;
@@ -546,9 +593,11 @@ public class ItemEditor extends javax.swing.JPanel {
         d.setVisible(true);
     }
 
-    private void setSelectedItem(Item selectedValue) {
-        item = selectedValue;
-        resetInputFields();
+    private void setSelectedItem(ExpandableCategoryList categoryUI, Item selectedValue) {
+        if (item != selectedValue) {
+            item = selectedValue;
+            resetInputFields();
+        }
     }
 
     private HashMap<Long, ExpandableCategoryList> allCats = new HashMap<>();
@@ -572,9 +621,31 @@ public class ItemEditor extends javax.swing.JPanel {
     private ExpandableCategoryList createNewCategoryUI(ItemCategory category) {
         final ExpandableCategoryList lv_catUI = new ExpandableCategoryList();
         lv_catUI.setCategory(category);
+        lv_catUI.getjListItem().addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                setSelectedItem(lv_catUI, lv_catUI.getjListItem().getSelectedValue());
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
         lv_catUI.getjListItem().addListSelectionListener((ListSelectionEvent e) -> {
-            if (e.getValueIsAdjusting()) {
-                setSelectedItem(lv_catUI.getjListItem().getSelectedValue());
+            if (e.getValueIsAdjusting() == false) {
+                setSelectedItem(lv_catUI, lv_catUI.getjListItem().getSelectedValue());
             }
         });
 

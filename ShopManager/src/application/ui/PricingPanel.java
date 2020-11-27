@@ -6,6 +6,7 @@
 package application.ui;
 
 import application.DatabaseManager;
+import application.JalaliCalendar;
 import entity.Item;
 import invoice.ui.CustomFocusTraversalPolicy;
 import java.awt.Component;
@@ -67,6 +68,8 @@ public class PricingPanel extends javax.swing.JPanel {
                 reportTable1.apply();
             }
         });
+        
+        inputFieldDate1.setText(JalaliCalendar.now()+"");
     }
 
     /**

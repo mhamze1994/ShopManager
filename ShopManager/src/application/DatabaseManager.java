@@ -54,18 +54,6 @@ public abstract class DatabaseManager {
         return null;
     }
 
-    public boolean Delete(String tableName, String condition) {
-        try {
-            try (Statement stmt = conn.createStatement()) {
-                condition = condition == null ? "1" : condition;
-                stmt.executeUpdate("DELETE FROM " + tableName + " WHERE " + condition);
-            }
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
 
     public void BeginTransaction() {
         try {

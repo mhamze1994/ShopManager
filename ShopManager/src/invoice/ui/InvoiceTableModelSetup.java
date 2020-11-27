@@ -8,20 +8,8 @@ package invoice.ui;
 import entity.Unit;
 import entity.invoice.Invoice;
 import entity.invoice.InvoiceDetail;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import ui.AppResource;
-import ui.AppTheme;
-import ui.controls.PressButton;
-import ui.controls.PressImageButton;
-import ui.controls.TextView;
 
 /**
  *
@@ -39,12 +27,14 @@ public class InvoiceTableModelSetup {
                         case 1:
                             return detail.getItem().getDescription();
                         case 2:
-                            return detail.getSuAmount().abs().toPlainString();
+                            return detail.getAmount().abs().toPlainString();
                         case 3:
-                            return Unit.toString(detail.getItem().getUnit1());
+                            return Unit.toString(detail.getUnitId());
                         case 4:
-                            return detail.getSuPrice().abs().toPlainString();
+                            return detail.getUnitPrice().abs().toPlainString();
                         case 5:
+                            return detail.getSuPrice().abs().toPlainString();
+                        case 6:
                             return detail.getTotalCost().abs().toPlainString();
                         default:
                             return null;
@@ -61,7 +51,8 @@ public class InvoiceTableModelSetup {
         columns.add("شرح کالا");
         columns.add("مقدار");
         columns.add("واحد");
-        columns.add("فی");
+        columns.add("قیمت واحد");
+        columns.add("قیمت جزء");
         columns.add("مبلغ کل");
         return columns;
     }
@@ -85,6 +76,7 @@ public class InvoiceTableModelSetup {
         jTable.getColumnModel().getColumn(columnIndex++).setMinWidth(200);
         jTable.getColumnModel().getColumn(columnIndex++).setMinWidth(80);
         jTable.getColumnModel().getColumn(columnIndex++).setMinWidth(60);
+        jTable.getColumnModel().getColumn(columnIndex++).setMinWidth(100);
         jTable.getColumnModel().getColumn(columnIndex++).setMinWidth(100);
         jTable.getColumnModel().getColumn(columnIndex++).setMinWidth(100);
 

@@ -14,15 +14,13 @@ import entity.invoice.Invoice;
 import entity.invoice.InvoiceDetail;
 import entity.invoice.InvoiceManager;
 import entity.Payment;
+import entity.Unit;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,7 +122,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         uiComponentOrder.add(contactPicker.getSearchField());
         uiComponentOrder.add(itemPicker.getNumberField());
         uiComponentOrder.add(itemPicker.getSearchField());
-        uiComponentOrder.add(inputSuAmount);
+        uiComponentOrder.add(inputAmount);
+        uiComponentOrder.add(comboListUnit);
         System.out.println(comboListPrice.getEditor());
         uiComponentOrder.add(comboListPrice.getEditor().getEditorComponent());
         uiComponentOrder.add(buttonInsert);
@@ -191,11 +190,13 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         buttonDelete.setVisible(true);
         buttonCancel.setVisible(true);
 
+        itemPicker.setSelectedItem(detail.getItem());
+        
         setSelectedItem(detail.getItem());
 //        itemPicker.setSelectedItem(detail.getItem());
 
-        inputSuAmount.setText(detail.getSuAmount().abs().stripTrailingZeros().toPlainString());
-        comboListPrice.setSelectedItem(detail.getSuPrice().abs().stripTrailingZeros().toPlainString());
+        inputAmount.setText(detail.getAmount().abs().stripTrailingZeros().toPlainString());
+        comboListPrice.setSelectedItem(detail.getUnitPrice().abs().stripTrailingZeros().toPlainString());
 
     }
 
@@ -203,8 +204,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         boolean isValid = true;
         StringBuilder errorLog = new StringBuilder();
         try {
-            BigDecimal inputAmount = new BigDecimal(inputSuAmount.getText());
-            if (inputAmount.compareTo(BigDecimal.ZERO) == -1 || inputAmount.equals(BigDecimal.ZERO)) {
+            BigDecimal amount = new BigDecimal(inputAmount.getText());
+            if (amount.compareTo(BigDecimal.ZERO) == -1 || amount.equals(BigDecimal.ZERO)) {
                 errorLog.append("مقدار وارد شده باید بیشتر از صفر باشد. -").append(System.lineSeparator());
                 isValid = false;
             }
@@ -361,15 +362,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             return;
         }
 
-        BigDecimal inputAmount = new BigDecimal(inputSuAmount.getText());
-//        in case the operation is in editing mode leave stock check to the final step
-        if (invoice.getInvoiceId() == 0) {
-            if (Invoice.isExporting(invoice.getOperationType()) && itemPicker.getSelectedItem().getLastKnownStock().compareTo(inputAmount) == -1) {
-                JOptionPane.showMessageDialog(this, "موجودی کافی نیست!", "خطا", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
-
         InvoiceDetail invoiceDetail;
         if (selectedDetail != null) {
             invoiceDetail = selectedDetail;
@@ -377,9 +369,22 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             invoiceDetail = new InvoiceDetail();
         }
 
+        BigDecimal amount = new BigDecimal(inputAmount.getText());
+        invoiceDetail.setAmount(amount);
+//        in case the operation is in editing mode leave stock check to the final step
+        if (invoice.getInvoiceId() == 0) {
+            if (Invoice.isExporting(invoice.getOperationType()) && 
+                    itemPicker.getSelectedItem().getLastKnownStock().compareTo(invoiceDetail.getSuAmount()) == -1) {
+                JOptionPane.showMessageDialog(this, "موجودی کافی نیست!", "خطا", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
         invoiceDetail.setItem(itemPicker.getSelectedItem());
-        invoiceDetail.setSuAmount(inputAmount);
-        invoiceDetail.setSuPrice(new BigDecimal(comboListPrice.getSelectedItem().toString()));
+        invoiceDetail.setUnit(((Unit) comboListUnit.getSelectedItem()).unitId);
+//        invoiceDetail.setSuAmount(amount);
+        invoiceDetail.setUnitPrice(new BigDecimal(comboListPrice.getSelectedItem().toString()));
+//        invoiceDetail.setSuPrice(new BigDecimal(comboListPrice.getSelectedItem().toString()));
 
         if (selectedDetail == null) {
             invoice.add(invoiceDetail);
@@ -398,7 +403,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             InputField inputFieldItem = itemPicker.getSearchField();
             inputFieldItem.requestFocus();
             inputFieldItem.setText("");
-            inputSuAmount.setText("");
+            inputAmount.setText("");
             comboListPrice.setSelectedItem("");
             itemPicker.getNumberField().setText("");
             invoiceItemList.clearSelection();
@@ -419,6 +424,15 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             refreshLatestTrades();
 
             fillItemPrices(item);
+
+            ArrayList<Unit> units = new ArrayList<>();
+            if (item != null) {
+                units.add(Unit.getUnit(item.getUnit1()));
+                if (item.getUnit2() != 0) {
+                    units.add(Unit.getUnit(item.getUnit2()));
+                }
+            }
+            comboListUnit.setModel(new DefaultComboBoxModel(units.toArray()));
 
         } catch (SQLException ex) {
             Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
@@ -510,8 +524,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         contactPicker = new application.ui.ContactPicker();
         groupPane4 = new ui.container.GroupPane();
         comboListPrice = new ui.controls.ComboList();
-        inputSuAmount = new ui.controls.input.InputFieldNumber();
+        inputAmount = new ui.controls.input.InputFieldNumber();
         itemPicker = new application.ui.ItemPicker();
+        comboListUnit = new ui.controls.ComboList();
         groupPaneInvoice = new ui.container.GroupPane();
         groupPaneTableHolder = new ui.container.GroupPane();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -652,16 +667,39 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             }
         });
 
-        groupPane4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
         comboListPrice.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "قیمت", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         comboListPrice.setEditable(true);
-        groupPane4.add(comboListPrice);
 
-        inputSuAmount.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "مقدار", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-        inputSuAmount.setPreferredSize(new java.awt.Dimension(100, 39));
-        groupPane4.add(inputSuAmount);
-        groupPane4.add(itemPicker);
+        inputAmount.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "مقدار", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        inputAmount.setPreferredSize(new java.awt.Dimension(100, 39));
+
+        comboListUnit.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "واحد", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        javax.swing.GroupLayout groupPane4Layout = new javax.swing.GroupLayout(groupPane4);
+        groupPane4.setLayout(groupPane4Layout);
+        groupPane4Layout.setHorizontalGroup(
+            groupPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(groupPane4Layout.createSequentialGroup()
+                .addContainerGap(45, Short.MAX_VALUE)
+                .addComponent(comboListPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboListUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(inputAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(itemPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        groupPane4Layout.setVerticalGroup(
+            groupPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(groupPane4Layout.createSequentialGroup()
+                .addGroup(groupPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(itemPicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(groupPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboListUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboListPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout paneBodyLayout = new javax.swing.GroupLayout(paneBody);
         paneBody.setLayout(paneBodyLayout);
@@ -670,7 +708,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             .addGroup(paneBodyLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(groupPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(groupPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBodyLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -707,7 +745,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(groupPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(groupPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paneBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textViewStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -763,7 +801,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitGroupMain, javax.swing.GroupLayout.DEFAULT_SIZE, 976, Short.MAX_VALUE)
+            .addComponent(splitGroupMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1140, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -823,6 +861,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private ui.controls.ImageButton buttonInsert;
     private ui.controls.ComboList comboListPaymentTypes;
     private ui.controls.ComboList comboListPrice;
+    private ui.controls.ComboList comboListUnit;
     private application.ui.ContactPicker contactPicker;
     private ui.container.GroupPane groupPane1;
     private ui.container.GroupPane groupPane2;
@@ -833,11 +872,11 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private ui.container.GroupPane groupPaneInvoice;
     private ui.container.GroupPane groupPanePayment;
     private ui.container.GroupPane groupPaneTableHolder;
+    private ui.controls.input.InputFieldNumber inputAmount;
     private javax.swing.JScrollPane inputAreaLog;
     private ui.controls.input.InputArea inputAreaLogEditor;
     private ui.controls.input.InputFieldDate inputDate;
     private ui.controls.input.InputFieldNumber inputFieldNumber1;
-    private ui.controls.input.InputFieldNumber inputSuAmount;
     private javax.swing.JTable invoiceItemList;
     private application.ui.ItemPicker itemPicker;
     private javax.swing.JScrollPane jScrollPane2;

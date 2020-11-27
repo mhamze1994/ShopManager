@@ -5,6 +5,7 @@
  */
 package application.ui;
 
+import application.CustomArrayList;
 import entity.Item;
 import entity.ItemCategory;
 import java.awt.Component;
@@ -12,7 +13,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -47,6 +47,14 @@ public class ExpandableCategoryList extends javax.swing.JPanel {
 
     public JList<Item> getjListItem() {
         return jListItem;
+    }
+
+    public int itemCount() {
+        return ((ItemListModel)jListItem.getModel()).getSize();
+    }
+
+    public void clearData() {
+        ((ItemListModel)jListItem.getModel()).clearData();
     }
 
     public void setjListItem(JList<Item> jListItem) {
@@ -179,6 +187,10 @@ public class ExpandableCategoryList extends javax.swing.JPanel {
         this.updateListener = updateListener;
     }
 
+    public void clearSelection() {
+        jListItem.clearSelection();
+    }
+
     public interface UpdateListener {
 
         public void update();
@@ -201,12 +213,16 @@ public class ExpandableCategoryList extends javax.swing.JPanel {
 
     private class ItemListModel extends DefaultListModel<Item> {
 
-        public ArrayList<Item> items = new ArrayList<>();
+        public CustomArrayList<Item> items = new CustomArrayList<>();
 
-        public boolean isOpen = false;
+        public boolean isOpen = true;
 
         public ItemListModel() {
 
+        }
+
+        public void clearData() {
+            items.clear();
         }
 
         @Override
@@ -269,7 +285,7 @@ public class ExpandableCategoryList extends javax.swing.JPanel {
         @Override
         public Component getListCellRendererComponent(JList<? extends Item> list, Item value, int index, boolean isSelected, boolean cellHasFocus) {
             tv.setText(value.getDescription());
-            if (isSelected) {
+            if (cellHasFocus) {
                 tv.setBackground(AppTheme.COLOR_MAIN_2);
 //                tv.setForeground(AppTheme.COLOR_WHITE);
             } else {

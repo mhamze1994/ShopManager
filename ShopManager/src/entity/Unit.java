@@ -38,6 +38,10 @@ public class Unit {
             Logger.getLogger(Unit.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static Unit getUnit(int unitId){
+        return allUnits.get(unitId);
+    }
 
     public static String toString(int unit1) {
         return allUnits.get(unit1).getUnitName();
