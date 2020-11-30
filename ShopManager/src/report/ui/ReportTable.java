@@ -7,6 +7,7 @@ package report.ui;
 
 import invoice.ui.CustomeDefaultTableCellRenderer;
 import invoice.ui.CustomeTableHeaderRenderer;
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.event.MouseAdapter;
 import java.sql.SQLException;
@@ -14,8 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.event.ListSelectionListener;
 import report.Report;
+import report.ReportItemPricing;
 
 /**
  *
@@ -32,6 +33,7 @@ public class ReportTable extends javax.swing.JPanel {
      */
     public ReportTable() {
         initComponents();
+        jScrollPane1.getViewport().setBackground(Color.WHITE);
     }
 
     public void setReport(Report report) {
@@ -56,19 +58,18 @@ public class ReportTable extends javax.swing.JPanel {
         }
 
     }
-    
-    public int getSelectedRow(){
+
+    public int getSelectedRow() {
         return jTable.getSelectedRow();
     }
-    
-    public Object getValue(int row , int col){
+
+    public Object getValue(int row, int col) {
         return jTable.getValueAt(row, col);
     }
 
-    public void addMouseAdapter(MouseAdapter adapter){
+    public void addMouseAdapter(MouseAdapter adapter) {
         jTable.addMouseListener(adapter);
     }
-    
 
     public void setColumnPreferredWidth(int index, int width) {
         jTable.getColumnModel().getColumn(index).setPreferredWidth(width);
@@ -89,9 +90,6 @@ public class ReportTable extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
-        groupPane1 = new ui.container.GroupPane();
-        pressButton2 = new ui.controls.PressButton();
-        pressButton1 = new ui.controls.PressButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -109,26 +107,12 @@ public class ReportTable extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTable);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        groupPane1.setPreferredSize(new java.awt.Dimension(631, 40));
-        groupPane1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        pressButton2.setText("اکسل");
-        groupPane1.add(pressButton2);
-
-        pressButton1.setText("پرینت");
-        groupPane1.add(pressButton1);
-
-        add(groupPane1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ui.container.GroupPane groupPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
-    private ui.controls.PressButton pressButton1;
-    private ui.controls.PressButton pressButton2;
     // End of variables declaration//GEN-END:variables
 
     public void apply() {

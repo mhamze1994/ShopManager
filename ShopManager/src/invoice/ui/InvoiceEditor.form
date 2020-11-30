@@ -76,7 +76,7 @@
                   <Color blue="33" green="33" red="33" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="&#x67e;&#x631;&#x62f;&#x627;&#x62e;&#x62a; &#x647;&#x627;"/>
+                <Property name="text" type="java.lang.String" value="&#x62f;&#x631;&#x6cc;&#x627;&#x641;&#x62a; &#x648; &#x67e;&#x631;&#x62f;&#x627;&#x62e;&#x62a;"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="B yekan+" size="18" style="0"/>
                 </Property>
@@ -123,12 +123,12 @@
                             </Constraint>
                           </Constraints>
                         </Component>
-                        <Component class="ui.controls.PressButton" name="pressButton1">
+                        <Component class="ui.controls.PressButton" name="pressButtonAddPayment">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="&#x627;&#x641;&#x632;&#x648;&#x62f;&#x646;"/>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pressButton1ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pressButtonAddPaymentActionPerformed"/>
                           </Events>
                           <Constraints>
                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

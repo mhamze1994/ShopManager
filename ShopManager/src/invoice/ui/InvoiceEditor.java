@@ -9,6 +9,7 @@ import application.Calculator;
 import entity.Contact;
 import application.DatabaseManager;
 import application.ItemPrice;
+import application.printer.InvoicePrint;
 import entity.Item;
 import entity.invoice.Invoice;
 import entity.invoice.InvoiceDetail;
@@ -17,17 +18,25 @@ import entity.Payment;
 import entity.Unit;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -52,6 +61,12 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     private String[] paymentTypes = {"POS", "صندوق"};
     private TabbedContainer parentTabbedPanel;
+
+    private KeyStroke strokeCtrlEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_DOWN_MASK);
+    private String actionMapSaveInvoice = "saveInvoice";
+
+    private KeyStroke strokeCtrlP = KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK);
+    private String actionMapGoToPayments = "goToPayments";
 
     /**
      * Creates new form InvoiceEditor
@@ -90,8 +105,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         inputAreaLogEditor.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
-        pressButton1.setTextHorizontalPosition(PressButton.POSITION_CENTER);
-        pressButton1.setTextVerticalPosition(PressButton.POSITION_CENTER);
+        pressButtonAddPayment.setTextHorizontalPosition(PressButton.POSITION_CENTER);
+        pressButtonAddPayment.setTextVerticalPosition(PressButton.POSITION_CENTER);
 
         comboListPaymentTypes.setModel(new DefaultComboBoxModel(paymentTypes));
 
@@ -115,6 +130,11 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 //            fillItemPrices(item);
         });
 
+        java.awt.EventQueue.invokeLater(contactPicker.getNumberField()::requestFocusInWindow);
+
+        setActionForAll(strokeCtrlEnter, actionMapSaveInvoice, invoiceSaveAction());
+        setActionForAll(strokeCtrlP, actionMapGoToPayments, goToPaymentAction());
+
         refreshLatestTrades();
         ArrayList<Component> uiComponentOrder = new ArrayList<>();
         uiComponentOrder.add(inputDate);
@@ -124,7 +144,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         uiComponentOrder.add(itemPicker.getSearchField());
         uiComponentOrder.add(inputAmount);
         uiComponentOrder.add(comboListUnit);
-        System.out.println(comboListPrice.getEditor());
         uiComponentOrder.add(comboListPrice.getEditor().getEditorComponent());
         uiComponentOrder.add(buttonInsert);
         paneBody.setFocusCycleRoot(true);
@@ -172,6 +191,38 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         //will automatically update
     }
 
+    private void setActionForAll(KeyStroke strokeCtrlEnter, String actionMapSaveInvoice, AbstractAction action) {
+        setActionFor(splitGroupMain, strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(contactPicker.getNumberField(), strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(contactPicker.getSearchField(), strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(itemPicker.getNumberField(), strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(itemPicker.getSearchField(), strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(inputAmount, strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(comboListUnit, strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor((JComponent) comboListPrice.getEditor().getEditorComponent(), strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(buttonInsert, strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(comboListPaymentTypes, strokeCtrlEnter, actionMapSaveInvoice, action);
+        setActionFor(pressButtonAddPayment, strokeCtrlEnter, actionMapSaveInvoice, action);
+    }
+
+    private AbstractAction invoiceSaveAction() {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveInvoice();
+            }
+        };
+    }
+
+    private AbstractAction goToPaymentAction() {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pressButtonAddPayment.requestFocusInWindow();
+            }
+        };
+    }
+
     private void updateInvoiceSummery() {
         invoice.updateTotalCost();
         String str = "مبلغ فاکتور : " + invoice.getTotalCost().abs().stripTrailingZeros().toPlainString();
@@ -191,7 +242,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         buttonCancel.setVisible(true);
 
         itemPicker.setSelectedItem(detail.getItem());
-        
+
         setSelectedItem(detail.getItem());
 //        itemPicker.setSelectedItem(detail.getItem());
 
@@ -299,15 +350,39 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             invoice.setDate(Long.parseLong(inputDate.getText().replace("/", "")));
             invoice.setContact(contactPicker.getSelectedContact().getContactId());
 
+            boolean success = false;
             if (invoice.getInvoiceId() == 0) {
                 InvoiceManager.insert(invoice);
                 refreshTitle(parentTabbedPanel);
                 inputFieldNumber1.setText(invoice.getInvoiceId() + "");
+                success = true;
             } else {
                 if (InvoiceManager.update(invoice) == false) {
                     JOptionPane.showMessageDialog(this, "اعمال تغییرات امکان پذیر نمیباشد.", "خطا", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    success = true;
                 }
+            }
+            if (success) {
+                int selection = JOptionPane.showOptionDialog(this, "فاکتور ثبت شد.", "هشدار", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"چاپ و بستن", "بستن", "ویرایش"}, "چاپ و بستن");
+                if (selection == 0 || selection == 1) {
 
+                    if (selection == 0) {
+                        try {
+                            PrinterJob myPrtJob = PrinterJob.getPrinterJob();
+                            PageFormat pageFormat = myPrtJob.defaultPage();
+                            myPrtJob.setPrintable(new InvoicePrint(invoice), pageFormat);
+                            myPrtJob.print();
+                        } catch (PrinterException ex) {
+                            Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
+                    Container parent = getParent();
+                    parent.remove(this);
+                    parent.invalidate();
+                    parent.repaint();
+                }
             }
         } catch (SQLException ex) {
             DatabaseManager.instance.Rollback();
@@ -373,8 +448,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         invoiceDetail.setAmount(amount);
 //        in case the operation is in editing mode leave stock check to the final step
         if (invoice.getInvoiceId() == 0) {
-            if (Invoice.isExporting(invoice.getOperationType()) && 
-                    itemPicker.getSelectedItem().getLastKnownStock().compareTo(invoiceDetail.getSuAmount()) == -1) {
+            if (Invoice.isExporting(invoice.getOperationType())
+                    && itemPicker.getSelectedItem().getLastKnownStock().compareTo(invoiceDetail.getSuAmount()) == -1) {
                 JOptionPane.showMessageDialog(this, "موجودی کافی نیست!", "خطا", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -500,7 +575,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         groupPane1 = new ui.container.GroupPane();
         groupPane2 = new ui.container.GroupPane();
         comboListPaymentTypes = new ui.controls.ComboList();
-        pressButton1 = new ui.controls.PressButton();
+        pressButtonAddPayment = new ui.controls.PressButton();
         groupPane3 = new ui.container.GroupPane();
         paymentMethodListUI = new ui.container.GroupPane();
         groupPaneCenter = new ui.container.GroupPane();
@@ -539,7 +614,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         textView1.setForeground(new java.awt.Color(51, 51, 51));
         textView1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        textView1.setText("پرداخت ها");
+        textView1.setText("دریافت و پرداخت");
         textView1.setFont(new java.awt.Font("B yekan+", 0, 18)); // NOI18N
 
         scroll1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -552,13 +627,13 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         groupPane2.setLayout(new java.awt.BorderLayout(5, 5));
         groupPane2.add(comboListPaymentTypes, java.awt.BorderLayout.CENTER);
 
-        pressButton1.setText("افزودن");
-        pressButton1.addActionListener(new java.awt.event.ActionListener() {
+        pressButtonAddPayment.setText("افزودن");
+        pressButtonAddPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pressButton1ActionPerformed(evt);
+                pressButtonAddPaymentActionPerformed(evt);
             }
         });
-        groupPane2.add(pressButton1, java.awt.BorderLayout.EAST);
+        groupPane2.add(pressButtonAddPayment, java.awt.BorderLayout.EAST);
 
         groupPane1.add(groupPane2, java.awt.BorderLayout.NORTH);
 
@@ -817,9 +892,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         saveInvoice();
     }//GEN-LAST:event_actionSaveActionPerformed
 
-    private void pressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressButton1ActionPerformed
+    private void pressButtonAddPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressButtonAddPaymentActionPerformed
         addPaymentMethodEmpty();
-    }//GEN-LAST:event_pressButton1ActionPerformed
+    }//GEN-LAST:event_pressButtonAddPaymentActionPerformed
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
         removeSelectedDetailFromInvoice();
@@ -838,7 +913,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     public void addPaymentMethodEmpty() {
         int selectedIndex = comboListPaymentTypes.getSelectedIndex();
-        JComponent c = null;
+        PaymentUISimple c = null;
         switch (selectedIndex) {
             case 0:
                 c = new PaymentUISimple(invoice, Payment.BANK_ACCOUNT);
@@ -847,6 +922,13 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 c = new PaymentUISimple(invoice, Payment.CASH_BOX);
                 break;
         }
+
+        if (c != null) {
+            for (int i = 0; i < c.getComponentCount(); i++) {
+                setActionFor((JComponent) c.getComponent(i), strokeCtrlEnter, actionMapSaveInvoice, invoiceSaveAction());
+            }
+        }
+
         paymentMethodListUI.add(c);
         paymentMethodListUI.revalidate();
         paymentMethodListUI.repaint();
@@ -885,7 +967,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     private ui.container.GroupPane paneBody;
     private ui.container.GroupPane paneHeader;
     private ui.container.GroupPane paymentMethodListUI;
-    private ui.controls.PressButton pressButton1;
+    private ui.controls.PressButton pressButtonAddPayment;
     private ui.container.Scroll scroll1;
     private ui.container.SplitGroup splitGroupMain;
     private ui.controls.TextView textView1;
@@ -913,6 +995,12 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void setActionFor(JComponent component, KeyStroke keyStroke, String actionMapKey, AbstractAction action) {
+
+        component.getInputMap().put(keyStroke, actionMapKey);
+        component.getActionMap().put(actionMapKey, action);
     }
 
     private class DefaultPriceListRenderer implements ListCellRenderer<ItemPrice> {

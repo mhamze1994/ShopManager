@@ -15,8 +15,13 @@ import javax.swing.UIManager;
 
 import invoice.ui.InvoiceIdInputDialog;
 import application.ui.ItemPricingDialog;
+import application.ui.PrinterSettingsDialog;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import report.ui.ReportPanelCustomerItemBill;
 import report.ui.ReportPanelPaymentBill;
+import report.ui.ReportPanelPaymentSum;
 import ui.AppResource;
 import ui.AppTheme;
 
@@ -38,22 +43,26 @@ public class Application extends javax.swing.JFrame {
         tabbedContainer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         tabbedContainer.setClosable(true);
 
-        buttonPriceAnnounce.setImage(AppResource.getImage(AppResource.ICON_PRICE_TAG , AppTheme.COLOR_MAIN));
-        
-        buttonBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_BUY , AppTheme.COLOR_MAIN));
-        buttonRefundBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_BUY_REFUND , AppTheme.COLOR_MAIN));
-        buttonSell.setImage(AppResource.getImage(AppResource.ICON_BILL_SELL , AppTheme.COLOR_MAIN));
-        ButtonRefundSell.setImage(AppResource.getImage(AppResource.ICON_BILL_SELL_REFUND , AppTheme.COLOR_MAIN));
-        buttonEditBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_EDIT , AppTheme.COLOR_MAIN));
-        buttonDefineItem.setImage(AppResource.getImage(AppResource.ICON_STOCK , AppTheme.COLOR_MAIN));
-        
-        buttonContacts.setImage(AppResource.getImage(AppResource.ICON_CONTACT , AppTheme.COLOR_MAIN));
-        
-        buttonReportPayment.setImage(AppResource.getImage(AppResource.ICON_REPORT_1 , AppTheme.COLOR_MAIN));
-        buttonReportContactItem.setImage(AppResource.getImage(AppResource.ICON_REPORT_2 , AppTheme.COLOR_MAIN));
-        
+        buttonPriceAnnounce.setImage(AppResource.getImage(AppResource.ICON_PRICE_TAG, AppTheme.COLOR_MAIN));
+
+        buttonBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_BUY, AppTheme.COLOR_MAIN));
+        buttonRefundBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_BUY_REFUND, AppTheme.COLOR_MAIN));
+        buttonSell.setImage(AppResource.getImage(AppResource.ICON_BILL_SELL, AppTheme.COLOR_MAIN));
+        ButtonRefundSell.setImage(AppResource.getImage(AppResource.ICON_BILL_SELL_REFUND, AppTheme.COLOR_MAIN));
+        buttonEditBuy.setImage(AppResource.getImage(AppResource.ICON_BILL_EDIT, AppTheme.COLOR_MAIN));
+        buttonDefineItem.setImage(AppResource.getImage(AppResource.ICON_STOCK, AppTheme.COLOR_MAIN));
+
+        buttonContacts.setImage(AppResource.getImage(AppResource.ICON_CONTACT, AppTheme.COLOR_MAIN));
+
+        buttonReportPayment.setImage(AppResource.getImage(AppResource.ICON_REPORT_1, AppTheme.COLOR_MAIN));
+        buttonReportContactItem.setImage(AppResource.getImage(AppResource.ICON_REPORT_2, AppTheme.COLOR_MAIN));
+        buttonReportPayments.setImage(AppResource.getImage(AppResource.ICON_REPORT_3, AppTheme.COLOR_MAIN));
+
+        buttonToolBackup.setImage(AppResource.getImage(AppResource.ICON_BACKUP, AppTheme.COLOR_MAIN));
+        buttonToolPrinter.setImage(AppResource.getImage(AppResource.ICON_PRINTER_SETTING, AppTheme.COLOR_MAIN));
+
         buttonUser.setVisible(false);
-        
+
         instance = this;
     }
 
@@ -81,12 +90,17 @@ public class Application extends javax.swing.JFrame {
         buttonRefundBuy = new ui.controls.ImageButton();
         buttonBuy = new ui.controls.ImageButton();
         panelReports = new ui.container.GroupPane();
+        buttonReportPayments = new ui.controls.ImageButton();
         buttonReportContactItem = new ui.controls.ImageButton();
         buttonReportPayment = new ui.controls.ImageButton();
+        panelTools = new ui.container.GroupPane();
+        buttonToolPrinter = new ui.controls.ImageButton();
+        buttonToolBackup = new ui.controls.ImageButton();
         mainPanel = new ui.container.GroupPane();
         tabbedContainer = new ui.container.TabbedContainer();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("نرم افزار حسابداری پارس");
 
         tabbedContainerHeader.setMinimumSize(new java.awt.Dimension(105, 110));
         tabbedContainerHeader.setPreferredSize(new java.awt.Dimension(100, 120));
@@ -199,6 +213,16 @@ public class Application extends javax.swing.JFrame {
 
         panelReports.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        buttonReportPayments.setText("بد/بس");
+        buttonReportPayments.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonReportPayments.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonReportPayments.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonReportPaymentsMousePressed(evt);
+            }
+        });
+        panelReports.add(buttonReportPayments);
+
         buttonReportContactItem.setText("مشتری / کالا");
         buttonReportContactItem.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
         buttonReportContactItem.setPreferredSize(new java.awt.Dimension(70, 70));
@@ -221,6 +245,30 @@ public class Application extends javax.swing.JFrame {
         buttonReportPayment.getAccessibleContext().setAccessibleName("button2");
 
         tabbedContainerHeader.addTab("گزارشات", panelReports);
+
+        panelTools.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        buttonToolPrinter.setText("تنظیم پرینتر");
+        buttonToolPrinter.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonToolPrinter.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonToolPrinter.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonToolPrinterMousePressed(evt);
+            }
+        });
+        panelTools.add(buttonToolPrinter);
+
+        buttonToolBackup.setText("پشتیبان گیری");
+        buttonToolBackup.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonToolBackup.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonToolBackup.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonToolBackupMousePressed(evt);
+            }
+        });
+        panelTools.add(buttonToolBackup);
+
+        tabbedContainerHeader.addTab("ابزار", panelTools);
 
         getContentPane().add(tabbedContainerHeader, java.awt.BorderLayout.NORTH);
         tabbedContainerHeader.getAccessibleContext().setAccessibleName("tab2");
@@ -274,6 +322,34 @@ public class Application extends javax.swing.JFrame {
         ItemPricingDialog.open();
     }//GEN-LAST:event_buttonPriceAnnounceMousePressed
 
+    private void buttonReportPaymentsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonReportPaymentsMousePressed
+        openPaymentBillSumPanel();
+    }//GEN-LAST:event_buttonReportPaymentsMousePressed
+
+    private void buttonToolPrinterMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonToolPrinterMousePressed
+        PrinterSettingsDialog.open();
+    }//GEN-LAST:event_buttonToolPrinterMousePressed
+
+    private void buttonToolBackupMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonToolBackupMousePressed
+        beginBackup();
+
+    }//GEN-LAST:event_buttonToolBackupMousePressed
+
+    private void beginBackup() {
+
+        JFileChooser chooser = new JFileChooser();
+
+        int choice = chooser.showSaveDialog(this);
+        if (choice != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File chosenFile = chooser.getSelectedFile();
+        if (!chosenFile.exists() && !chosenFile.isDirectory()) {
+            DefaultDatabaseManager.backup("C:\\xampp\\mysql\\bin", "shop_man_system", "system", "shopmanager", chosenFile.getAbsolutePath());
+        }
+
+    }
+
     private void openInvoiceBuy() {
         openInvoicePanel(new Invoice(Invoice.TYPE_BUY));
     }
@@ -306,6 +382,15 @@ public class Application extends javax.swing.JFrame {
 
     private void openContactItemBillPanel() {
         ReportPanelCustomerItemBill reportPanel = new ReportPanelCustomerItemBill();
+        tabbedContainer.add(reportPanel);
+        reportPanel.refreshTitle(tabbedContainer);
+        tabbedContainer.setSelectedIndex(tabbedContainer.getComponentCount() - 1);
+        tabbedContainer.revalidate();
+        tabbedContainer.repaint();
+    }
+
+    private void openPaymentBillSumPanel() {
+        ReportPanelPaymentSum reportPanel = new ReportPanelPaymentSum();
         tabbedContainer.add(reportPanel);
         reportPanel.refreshTitle(tabbedContainer);
         tabbedContainer.setSelectedIndex(tabbedContainer.getComponentCount() - 1);
@@ -379,7 +464,10 @@ public class Application extends javax.swing.JFrame {
     private ui.controls.ImageButton buttonRefundBuy;
     private ui.controls.ImageButton buttonReportContactItem;
     private ui.controls.ImageButton buttonReportPayment;
+    private ui.controls.ImageButton buttonReportPayments;
     private ui.controls.ImageButton buttonSell;
+    private ui.controls.ImageButton buttonToolBackup;
+    private ui.controls.ImageButton buttonToolPrinter;
     private ui.controls.ImageButton buttonUser;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -387,6 +475,7 @@ public class Application extends javax.swing.JFrame {
     private ui.container.GroupPane panelBuy;
     private ui.container.GroupPane panelReports;
     private ui.container.GroupPane panelStoreAndItems;
+    private ui.container.GroupPane panelTools;
     private ui.container.TabbedContainer tabbedContainer;
     private ui.container.TabbedContainer tabbedContainerHeader;
     // End of variables declaration//GEN-END:variables

@@ -42,6 +42,9 @@ public class AppResource {
     public static final String ICON_STOCK = "/ui/res/stock.png";
     public static final String ICON_REPORT_1 = "/ui/res/report_1.png";
     public static final String ICON_REPORT_2 = "/ui/res/report_2.png";
+    public static final String ICON_REPORT_3 = "/ui/res/money.png";
+    public static final String ICON_BACKUP = "/ui/res/backup.png";
+    public static final String ICON_PRINTER_SETTING = "/ui/res/printer_setting.png";
 
     public static BufferedImage getImage(String path) {
         return getImage(path, null);
