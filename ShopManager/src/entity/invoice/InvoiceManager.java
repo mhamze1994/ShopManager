@@ -1,5 +1,6 @@
 package entity.invoice;
 
+import application.Calculator;
 import entity.Payment;
 import application.DatabaseManager;
 import java.sql.CallableStatement;
@@ -41,10 +42,20 @@ public class InvoiceManager {
                     if (p.getObjectType() == Payment.STORE) {
                         invoice.setStorePayment(p);
                     } else {
-                        invoice.addPayment(p);
+                        if (p.getObjectType() != Payment.CHEQUE) {
+                            invoice.addPayment(p);
+                        }
                     }
                 }
 
+                findInvoice.getMoreResults();
+                ResultSet rsCheques = findInvoice.getResultSet();
+                while (rsCheques.next()) {
+                    Payment p = new Payment();
+                    p.readResultSetAsCheque(invoice , rsCheques);
+                    invoice.addPayment(p);
+                }
+                
             }
 
             findInvoice.close();
@@ -115,12 +126,11 @@ public class InvoiceManager {
             DatabaseManager.SetInt/*   */(detailInsert, 3, detail.getOperationType());
             DatabaseManager.SetLong/*  */(detailInsert, 4, detail.getItemId());
 
-            
             DatabaseManager.SetBigDecimal(detailInsert, 5, detail.getAmount());
             DatabaseManager.SetInt(detailInsert, 6, detail.getUnitId());
             DatabaseManager.SetBigDecimal(detailInsert, 7, detail.getRatio());
 //            DatabaseManager.SetBigDecimal(detailInsert, 5, detail.getSuAmount());
-            
+
             DatabaseManager.SetBigDecimal(detailInsert, 8, detail.getUnitPrice());
             DatabaseManager.SetBigDecimal(detailInsert, 9, detail.getSuPrice());
 
@@ -141,6 +151,18 @@ public class InvoiceManager {
                 DatabaseManager.SetInt(ps, 6, payment.getObjectType());
                 DatabaseManager.SetLong(ps, 7, invoice.getDate());
                 ps.execute();
+
+            }
+            if (payment.getObjectType() == Payment.CHEQUE) {
+                try (CallableStatement ps = DatabaseManager.instance.prepareCall("CALL cheque_insert(?,?,?,?,?,?)")) {
+                    DatabaseManager.SetLong(ps, 1, payment.getExtraLong("bankId"));
+                    DatabaseManager.SetBigDecimal(ps, 2, Calculator.add(payment.getDeptor(), payment.getCreditor()));
+                    DatabaseManager.SetInt(ps, 3, Invoice.isExporting(invoice.getOperationType()) ? 1 : 2);//1 received cheque , 2 payed cheque
+                    DatabaseManager.SetLong(ps, 4, payment.getExtraLong("serial"));
+                    DatabaseManager.SetLong(ps, 5, invoice.getInvoiceId());
+                    DatabaseManager.SetLong(ps, 6, payment.getExtraLong("date"));
+                    ps.execute();
+                }
             }
         }
     }

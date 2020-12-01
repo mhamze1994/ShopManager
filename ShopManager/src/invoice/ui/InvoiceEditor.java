@@ -59,7 +59,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     private InvoiceDetail selectedDetail;
 
-    private String[] paymentTypes = {"POS", "صندوق"};
+    private String[] paymentTypes = {"POS", "صندوق" , "چک"};
     private TabbedContainer parentTabbedPanel;
 
     private KeyStroke strokeCtrlEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_DOWN_MASK);
@@ -639,7 +639,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         groupPane3.setLayout(new java.awt.BorderLayout());
 
-        paymentMethodListUI.setLayout(new java.awt.GridLayout(0, 1));
+        paymentMethodListUI.setLayout(new javax.swing.BoxLayout(paymentMethodListUI, javax.swing.BoxLayout.PAGE_AXIS));
         groupPane3.add(paymentMethodListUI, java.awt.BorderLayout.NORTH);
 
         groupPane1.add(groupPane3, java.awt.BorderLayout.CENTER);
@@ -920,6 +920,9 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 break;
             case 1:
                 c = new PaymentUISimple(invoice, Payment.CASH_BOX);
+                break;
+            case 2:
+                c = new PaymentUISimple(invoice , Payment.CHEQUE);
                 break;
         }
 

@@ -52,6 +52,9 @@ public class DefaultDatabaseManager extends DatabaseManager {
     }
 
     public static boolean backup(String mysqlBinDirectory, String user, String pass, String dbName, String outputPath) {
+        if (outputPath.endsWith(".sql") || outputPath.endsWith(".txt")) {
+            outputPath = outputPath.substring(0, outputPath.length() - 4);
+        }
 
         String[] arg = new String[]{mysqlBinDirectory + "\\mysqldump -u" + user + " -p" + pass + " --databases " + dbName + " -r  " + outputPath};
         try {
@@ -91,10 +94,9 @@ public class DefaultDatabaseManager extends DatabaseManager {
                         JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
+
             System.out.println("FROM CATCH" + e.toString());
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DefaultDatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
 

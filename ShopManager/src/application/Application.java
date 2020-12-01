@@ -346,6 +346,8 @@ public class Application extends javax.swing.JFrame {
         File chosenFile = chooser.getSelectedFile();
         if (!chosenFile.exists() && !chosenFile.isDirectory()) {
             DefaultDatabaseManager.backup("C:\\xampp\\mysql\\bin", "shop_man_system", "system", "shopmanager", chosenFile.getAbsolutePath());
+        }else{
+            JOptionPane.showMessageDialog(this, "نام دیگری برای فایل انتخاب کنید", "خطا", JOptionPane.ERROR_MESSAGE);
         }
 
     }

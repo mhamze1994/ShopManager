@@ -47,6 +47,10 @@ public class InputFieldDate extends InputField {
 
     public boolean isValidInput() {
         String text = getText();
+        if (text.trim().isEmpty()) {
+            return false;
+        }
+
         String[] date = text.split(DELIMITER + "");
         String year = date[0];
         String month = date[1];
