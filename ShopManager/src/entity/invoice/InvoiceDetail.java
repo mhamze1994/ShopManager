@@ -58,7 +58,6 @@ public class InvoiceDetail {
 
     private Item item;
 
-
     public void setInvoiceUpdateListener(InvoiceUpdateListener invoiceUpdateListener) {
         this.invoiceUpdateListener = invoiceUpdateListener;
     }
@@ -103,7 +102,7 @@ public class InvoiceDetail {
 //        this.itemId = itemId;
 //    }
     public BigDecimal getSuAmount() {
-        suAmount = Calculator.mul(getAmount() , getRatio());
+        suAmount = Calculator.mul(getAmount(), getRatio());
         if (Invoice.isExporting(operationType)) {
             return suAmount.negate();
         }
@@ -119,13 +118,12 @@ public class InvoiceDetail {
         fireUpdate();
     }
 
-    
 //    public void setSuAmount(BigDecimal suAmount) {
 //        this.suAmount = suAmount;
 //        fireUpdate();
 //    }
     public BigDecimal getSuPrice() {
-        suPrice = Calculator.divAndRem(getUnitPrice() , getRatio())[0];
+        suPrice = Calculator.divAndRem(getUnitPrice(), getRatio())[0];
         if (Invoice.isRefund(operationType)) {
             return suPrice.negate();
         }
@@ -136,7 +134,6 @@ public class InvoiceDetail {
 //        this.suPrice = suPrice;
 //        fireUpdate();
 //    }
-
     public long getRefDetailId() {
         return refDetailId;
     }
@@ -154,7 +151,7 @@ public class InvoiceDetail {
     }
 
     public BigDecimal getTotalCost() {
-        return Calculator.mul(getAmount() , getUnitPrice());
+        return Calculator.mul(getAmount(), getUnitPrice());
 //        return Calculator.mul(getSuPrice(), getSuAmount());
     }
 
@@ -179,9 +176,13 @@ public class InvoiceDetail {
         itemId = rs.getLong(pIndex++);
         amount = rs.getBigDecimal(pIndex++).stripTrailingZeros();
         unitId = rs.getInt(pIndex++);
+
         BigDecimal ratio = rs.getBigDecimal(pIndex++).stripTrailingZeros();
+
         unitPrice = rs.getBigDecimal(pIndex++).stripTrailingZeros();
+
         suAmount = rs.getBigDecimal(pIndex++).stripTrailingZeros();
+
         suPrice = rs.getBigDecimal(pIndex++).stripTrailingZeros();
         refDetailId = rs.getLong(pIndex++);
         invoiceId = rs.getLong(pIndex++);

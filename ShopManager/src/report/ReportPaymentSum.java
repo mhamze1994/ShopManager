@@ -5,6 +5,7 @@
  */
 package report;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -13,18 +14,24 @@ import java.sql.SQLException;
  * @author PersianDevStudio
  */
 public class ReportPaymentSum extends Report {
-    
+
     private long contactId;
 
     @Override
     public String read(ResultSet rs, int index) throws SQLException {
+        BigDecimal r = rs.getBigDecimal(4);
         switch (index) {
             case 1:
                 return rs.getString(index);
             case 2:
+                return rs.getBigDecimal(3).stripTrailingZeros().toPlainString();
             case 3:
+                return rs.getBigDecimal(2).stripTrailingZeros().toPlainString();
             case 4:
-                return rs.getBigDecimal(index).stripTrailingZeros().toPlainString();
+                return r.compareTo(BigDecimal.ZERO) == -1 ? r.abs().stripTrailingZeros().toPlainString() : "";
+            case 5:
+                return r.compareTo(BigDecimal.ZERO) == +1 ? r.abs().stripTrailingZeros().toPlainString() : "";
+
         }
         return "???";
     }
@@ -42,7 +49,6 @@ public class ReportPaymentSum extends Report {
         this.contactId = contactId;
     }
 
-    
     @Override
     public void report() throws SQLException {
         prepareCallStatement("call report_payment_sum(?);");
@@ -52,7 +58,7 @@ public class ReportPaymentSum extends Report {
 
     @Override
     public String[] headers() {
-        return new String[]{"مشخصات", "بستانکار", "بدهکار", "مانده"};
+        return new String[]{"مشخصات", "بدهکار" , "بستانکار","مانده بدهکار", "مانده بستانکار"};
     }
 
 }
