@@ -8,9 +8,12 @@ package entity;
 import application.DatabaseManager;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +22,27 @@ import java.util.logging.Logger;
  * @author PersianDevStudio
  */
 public class Item extends AbstractEntity {
+
+    public static ArrayList<AnbarGardaniEntity> loadAnbarGardani() {
+        ArrayList<AnbarGardaniEntity> all = new ArrayList<>();
+        try {
+
+            try (CallableStatement call = DatabaseManager.instance.prepareCall("call load_anbar_gardani()");
+                    ResultSet rs = call.executeQuery()) {
+                while (rs.next()) {
+                    all.add(new AnbarGardaniEntity(
+                            rs.getLong(1),
+                            rs.getString(2),
+                            rs.getBigDecimal(3),
+                            rs.getBigDecimal(4),
+                            rs.getBigDecimal(5)));
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Item.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return all;
+    }
 
     //columns of item table
     private long itemId;

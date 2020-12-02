@@ -59,7 +59,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
     private InvoiceDetail selectedDetail;
 
-    private String[] paymentTypes = {"POS", "صندوق" , "چک"};
+    private String[] paymentTypes = {"POS", "صندوق", "چک"};
     private TabbedContainer parentTabbedPanel;
 
     private KeyStroke strokeCtrlEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_DOWN_MASK);
@@ -443,6 +443,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         } else {
             invoiceDetail = new InvoiceDetail();
         }
+        invoiceDetail.setItem(itemPicker.getSelectedItem());
 
         BigDecimal amount = new BigDecimal(inputAmount.getText());
         invoiceDetail.setAmount(amount);
@@ -455,7 +456,6 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             }
         }
 
-        invoiceDetail.setItem(itemPicker.getSelectedItem());
         invoiceDetail.setUnit(((Unit) comboListUnit.getSelectedItem()).unitId);
 //        invoiceDetail.setSuAmount(amount);
         invoiceDetail.setUnitPrice(new BigDecimal(comboListPrice.getSelectedItem().toString()));
@@ -922,7 +922,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 c = new PaymentUISimple(invoice, Payment.CASH_BOX);
                 break;
             case 2:
-                c = new PaymentUISimple(invoice , Payment.CHEQUE);
+                c = new PaymentUISimple(invoice, Payment.CHEQUE);
                 break;
         }
 

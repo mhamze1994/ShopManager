@@ -23,7 +23,9 @@ public class Settings {
     public static final String KEY_PRINT_VERTICAL_PADDING = "print_vp";
     public static final String KEY_PRINT_HORIZONTAL_PADDING = "print_hp";
     public static final String KEY_PRINT_PAPER_WIDTH = "print_paper_w";
+    public static String KEY_PRINT_PAPER_HEIGHT = "print_paper_h";
     public static final String KEY_SHOP_TITLE = "shop_title";
+    
 
     private static HashMap<String, String> config;
 

@@ -1,0 +1,538 @@
+-- MySQL dump 10.16  Distrib 10.1.13-MariaDB, for Win32 (AMD64)
+--
+-- Host: localhost    Database: shopmanager
+-- ------------------------------------------------------
+-- Server version	10.1.13-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `shopmanager`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `shopmanager` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_persian_ci */;
+
+USE `shopmanager`;
+
+--
+-- Table structure for table `anbar_gardani`
+--
+
+DROP TABLE IF EXISTS `anbar_gardani`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `anbar_gardani` (
+  `item_id` bigint(20) NOT NULL,
+  `count_1` decimal(18,9) DEFAULT NULL,
+  `count_2` decimal(18,9) DEFAULT NULL,
+  `count_3` decimal(18,9) DEFAULT NULL,
+  PRIMARY KEY (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `anbar_gardani`
+--
+
+LOCK TABLES `anbar_gardani` WRITE;
+/*!40000 ALTER TABLE `anbar_gardani` DISABLE KEYS */;
+INSERT INTO `anbar_gardani` VALUES (13020801,2.000000000,0.000000000,0.000000000),(13020802,3.000000000,3.000000000,3.000000000),(13020803,4.000000000,0.000000000,0.000000000),(13020804,1.000000000,0.000000000,0.000000000),(13020805,2.000000000,0.000000000,0.000000000),(13020806,6.000000000,0.000000000,0.000000000),(13020901,3.000000000,0.000000000,0.000000000),(13020902,12.000000000,0.000000000,0.000000000),(13020903,0.000000000,0.000000000,0.000000000),(13020904,0.000000000,0.000000000,0.000000000),(13020905,0.000000000,0.000000000,0.000000000),(13020906,0.000000000,0.000000000,0.000000000),(13021301,0.000000000,0.000000000,0.000000000),(13021302,0.000000000,0.000000000,0.000000000),(13021303,0.000000000,0.000000000,0.000000000),(13021401,0.000000000,0.000000000,0.000000000),(13021402,0.000000000,0.000000000,0.000000000),(13021403,0.000000000,0.000000000,0.000000000),(13021404,0.000000000,0.000000000,0.000000000),(13021405,0.000000000,0.000000000,0.000000000),(13021501,0.000000000,0.000000000,0.000000000),(13021502,0.000000000,0.000000000,0.000000000),(13021701,0.000000000,0.000000000,0.000000000),(13021702,0.000000000,0.000000000,0.000000000),(13021703,0.000000000,0.000000000,0.000000000),(13021704,0.000000000,0.000000000,0.000000000),(13021705,0.000000000,0.000000000,0.000000000),(13021801,0.000000000,0.000000000,0.000000000),(13021802,0.000000000,0.000000000,0.000000000),(13021901,0.000000000,0.000000000,0.000000000),(13021902,0.000000000,0.000000000,0.000000000),(13021903,0.000000000,0.000000000,0.000000000),(13021904,0.000000000,0.000000000,0.000000000),(13022001,0.000000000,0.000000000,0.000000000),(13022002,0.000000000,0.000000000,0.000000000),(13022101,0.000000000,0.000000000,0.000000000),(13022102,0.000000000,0.000000000,0.000000000);
+/*!40000 ALTER TABLE `anbar_gardani` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bank`
+--
+
+DROP TABLE IF EXISTS `bank`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bank` (
+  `bankId` int(11) NOT NULL,
+  `bankName` varchar(20) COLLATE utf8_persian_ci NOT NULL,
+  PRIMARY KEY (`bankId`),
+  UNIQUE KEY `bankInfo` (`bankName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bank`
+--
+
+LOCK TABLES `bank` WRITE;
+/*!40000 ALTER TABLE `bank` DISABLE KEYS */;
+INSERT INTO `bank` VALUES (1010,'اقتصاد نوین'),(1009,'انصار'),(1008,'پارسیان'),(1032,'پاسارگاد'),(1016,'پست بانک'),(1003,'تجارت'),(1015,'توسعه تعاون'),(1014,'توسعه صادرات'),(1004,'رفاه'),(1013,'سپه'),(1031,'سرمایه'),(1007,'شهر'),(1006,'صادرات'),(1033,'قوامین'),(1011,'کشاورزی'),(1020,'گردشگری'),(1012,'مسکن'),(1002,'ملت'),(1001,'ملی');
+/*!40000 ALTER TABLE `bank` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bankaccount`
+--
+
+DROP TABLE IF EXISTS `bankaccount`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bankaccount` (
+  `bankAccountId` bigint(20) NOT NULL,
+  `bankId` int(11) NOT NULL,
+  `branchId` int(11) NOT NULL,
+  `accountInfo` text COLLATE utf8_persian_ci NOT NULL,
+  PRIMARY KEY (`bankAccountId`),
+  KEY `bankId` (`bankId`),
+  KEY `branchId` (`branchId`),
+  CONSTRAINT `cst_account_bank` FOREIGN KEY (`branchId`) REFERENCES `bankbranch` (`branchId`) ON UPDATE CASCADE,
+  CONSTRAINT `cst_account_branch` FOREIGN KEY (`bankId`) REFERENCES `bank` (`bankId`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bankaccount`
+--
+
+LOCK TABLES `bankaccount` WRITE;
+/*!40000 ALTER TABLE `bankaccount` DISABLE KEYS */;
+INSERT INTO `bankaccount` VALUES (10010101,1001,100101,'4687215;5986457125348546'),(10020101,1002,100201,'65978754;6104337942491078');
+/*!40000 ALTER TABLE `bankaccount` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bankbranch`
+--
+
+DROP TABLE IF EXISTS `bankbranch`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bankbranch` (
+  `branchId` int(11) NOT NULL,
+  `branchInfo` text COLLATE utf8_persian_ci NOT NULL,
+  `bankId` int(11) NOT NULL,
+  PRIMARY KEY (`branchId`),
+  KEY `idx_branch_bank` (`bankId`),
+  CONSTRAINT `cst_branch_bank` FOREIGN KEY (`bankId`) REFERENCES `bank` (`bankId`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bankbranch`
+--
+
+LOCK TABLES `bankbranch` WRITE;
+/*!40000 ALTER TABLE `bankbranch` DISABLE KEYS */;
+INSERT INTO `bankbranch` VALUES (100101,'مرکزی',1001),(100102,'کمربندی',1001),(100201,'مرکزی',1002),(100202,'امام خمینی',1002);
+/*!40000 ALTER TABLE `bankbranch` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cheque`
+--
+
+DROP TABLE IF EXISTS `cheque`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cheque` (
+  `chequeid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bankid` bigint(20) DEFAULT NULL,
+  `value` decimal(10,0) DEFAULT NULL,
+  `type` int(11) DEFAULT NULL,
+  `serial` bigint(20) DEFAULT NULL,
+  `invoiceid` bigint(20) DEFAULT NULL,
+  `date` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`chequeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cheque`
+--
+
+LOCK TABLES `cheque` WRITE;
+/*!40000 ALTER TABLE `cheque` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cheque` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `chequebook`
+--
+
+DROP TABLE IF EXISTS `chequebook`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `chequebook` (
+  `chequeBookId` bigint(20) NOT NULL,
+  `bankAccountId` bigint(20) NOT NULL,
+  `serialFirst` int(11) NOT NULL,
+  `serialLast` int(11) NOT NULL,
+  `info` int(11) NOT NULL,
+  PRIMARY KEY (`chequeBookId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chequebook`
+--
+
+LOCK TABLES `chequebook` WRITE;
+/*!40000 ALTER TABLE `chequebook` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chequebook` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `config`
+--
+
+DROP TABLE IF EXISTS `config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `config` (
+  `configid` varchar(128) COLLATE utf8_persian_ci DEFAULT NULL,
+  `value` varchar(128) COLLATE utf8_persian_ci DEFAULT NULL,
+  KEY `config_configid_IDX` (`configid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `config`
+--
+
+LOCK TABLES `config` WRITE;
+/*!40000 ALTER TABLE `config` DISABLE KEYS */;
+INSERT INTO `config` VALUES ('print_vp','5'),('print_hp','5'),('print_paper_w','450'),('shop_title','خدمات کامپیوتری'),('print_paper_h','900');
+/*!40000 ALTER TABLE `config` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contact`
+--
+
+DROP TABLE IF EXISTS `contact`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contact` (
+  `contactId` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `nationalId` bigint(20) DEFAULT NULL,
+  `address` text COLLATE utf8_persian_ci,
+  `regDate` bigint(20) NOT NULL,
+  `name` varchar(100) COLLATE utf8_persian_ci DEFAULT NULL,
+  `lastname` varchar(100) COLLATE utf8_persian_ci DEFAULT NULL,
+  `fathername` varchar(100) COLLATE utf8_persian_ci DEFAULT NULL,
+  `full_info` varchar(300) COLLATE utf8_persian_ci DEFAULT NULL COMMENT 'combination of name , lastname and fathername',
+  `phone` varchar(100) COLLATE utf8_persian_ci DEFAULT NULL,
+  PRIMARY KEY (`contactId`),
+  UNIQUE KEY `indx_contact_national` (`nationalId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1115 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contact`
+--
+
+LOCK TABLES `contact` WRITE;
+/*!40000 ALTER TABLE `contact` DISABLE KEYS */;
+INSERT INTO `contact` VALUES (1112,NULL,'',139901010000,'پی سی سنتر','pc center','','پیسیسنترpccenter',''),(1113,NULL,'',139901010000,'مجتبی','غلامی حقیقی (آپادانا)','','مجتبیغلامیحقیقی(آپادانا)',''),(1114,NULL,'',139901010000,'متفرقه','','','متفرقه','');
+/*!40000 ALTER TABLE `contact` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `invoice`
+--
+
+DROP TABLE IF EXISTS `invoice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice` (
+  `invoiceid` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `invoicedate` bigint(20) DEFAULT NULL,
+  `contact` bigint(20) unsigned DEFAULT NULL,
+  `operationtype` int(11) DEFAULT NULL,
+  `totalCost` decimal(16,4) DEFAULT NULL,
+  PRIMARY KEY (`invoiceid`)
+) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `invoice`
+--
+
+LOCK TABLES `invoice` WRITE;
+/*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `invoicedetail`
+--
+
+DROP TABLE IF EXISTS `invoicedetail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoicedetail` (
+  `detailId` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `date` bigint(20) unsigned NOT NULL,
+  `contactId` bigint(20) unsigned DEFAULT NULL,
+  `operationType` int(11) DEFAULT NULL,
+  `itemId` bigint(20) unsigned DEFAULT NULL,
+  `amount` decimal(18,9) DEFAULT NULL,
+  `unitid` int(11) DEFAULT NULL,
+  `ratio` decimal(18,9) DEFAULT NULL,
+  `unitprice` decimal(18,9) NOT NULL,
+  `suAmount` decimal(18,9) DEFAULT NULL COMMENT 'smallest unit amount',
+  `suPrice` decimal(16,4) DEFAULT NULL,
+  `refDetailId` bigint(20) DEFAULT NULL,
+  `invoiceid` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`detailId`),
+  KEY `idx_invoice_detail_contact` (`contactId`),
+  KEY `itemId` (`itemId`),
+  KEY `idx_invoicedetail_invoiceid` (`invoiceid`) USING BTREE,
+  CONSTRAINT `cst_invoice_detail_contact_id` FOREIGN KEY (`contactId`) REFERENCES `contact` (`contactId`) ON UPDATE CASCADE,
+  CONSTRAINT `cst_invoice_detail_item_id` FOREIGN KEY (`itemId`) REFERENCES `item` (`itemId`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4786 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `invoicedetail`
+--
+
+LOCK TABLES `invoicedetail` WRITE;
+/*!40000 ALTER TABLE `invoicedetail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invoicedetail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `item`
+--
+
+DROP TABLE IF EXISTS `item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item` (
+  `itemId` bigint(20) unsigned NOT NULL,
+  `categoryId` bigint(20) DEFAULT NULL,
+  `description` varchar(50) COLLATE utf8_persian_ci DEFAULT NULL,
+  `unit1` int(11) DEFAULT NULL,
+  `ratio1` decimal(18,9) DEFAULT NULL,
+  `unit2` int(11) DEFAULT NULL,
+  PRIMARY KEY (`itemId`),
+  KEY `idx_item_category` (`categoryId`),
+  KEY `unit1` (`unit1`),
+  KEY `unit2` (`unit2`),
+  CONSTRAINT `cst_item_category` FOREIGN KEY (`categoryId`) REFERENCES `itemcategory` (`categoryId`) ON UPDATE CASCADE,
+  CONSTRAINT `cst_unit_1` FOREIGN KEY (`unit1`) REFERENCES `unit` (`unitId`) ON UPDATE CASCADE,
+  CONSTRAINT `cst_unit_2` FOREIGN KEY (`unit2`) REFERENCES `unit` (`unitId`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `item`
+--
+
+LOCK TABLES `item` WRITE;
+/*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES (13020801,130208,'کیبورد A4 Tech KR-85',5,NULL,NULL),(13020802,130208,'کیبورد Beyond Combo BMK-4420',5,NULL,NULL),(13020803,130208,'کیبورد SADATA Combo SKM-1554',5,NULL,NULL),(13020804,130208,'کیبورد SADATA SK-1600',5,NULL,NULL),(13020805,130208,'کیبورد sadata 1500S',5,NULL,NULL),(13020806,130208,'کیبورد Sadata SK1500',5,NULL,NULL),(13020901,130209,'ماوس DATIS E-300',5,NULL,NULL),(13020902,130209,'ماوس Genius G-4111',5,NULL,NULL),(13020903,130209,'ماوس Dell Wired',5,NULL,NULL),(13020904,130209,'ماوس HP wireless',5,NULL,NULL),(13020905,130209,'ماوس Sadata SM-54',5,NULL,NULL),(13020906,130209,'ماوس Havit MS4252',5,NULL,NULL),(13021301,130213,'دسته بازی Macher Double MR-56',5,NULL,NULL),(13021302,130213,'دسته بازی Macher Shock Double MR-58',5,NULL,NULL),(13021303,130213,'دسته بازی Shock Single TSCO TG115',5,NULL,NULL),(13021401,130214,'پد ماوس طبی A4',5,NULL,NULL),(13021402,130214,'پد ماوس گیم - دور دوخت',5,NULL,NULL),(13021403,130214,'پد ماوس - طرح روزنامه',5,NULL,NULL),(13021404,130214,'پد ماوس کوچک - Logitech',5,NULL,NULL),(13021405,130214,'پد ماوس گیم - درجه 1',5,NULL,NULL),(13021501,130215,'هندزفری Duao X4S',5,NULL,NULL),(13021502,130215,'هندزفری E100',5,NULL,NULL),(13021701,130217,'فلش 16GB Apacer AH13C',5,NULL,NULL),(13021702,130217,'فلش 16GB Kingstar K210',5,NULL,NULL),(13021703,130217,'فلش 32GB apacer AH13C',5,NULL,NULL),(13021704,130217,'فلش 32GB Silicon Power T07',5,NULL,NULL),(13021705,130217,'فلش 64GB Kingstar K210',5,NULL,NULL),(13021801,130218,'شارژر سامسونگ',5,NULL,NULL),(13021802,130218,'شارژر هواوی',5,NULL,NULL),(13021901,130219,'کابل پرینتر 5 متر XP',5,NULL,NULL),(13021902,130219,'کابل پرینتر 1.5 متر XP',5,NULL,NULL),(13021903,130219,'کابل HDMI - یک و نیم متر Macher',5,NULL,NULL),(13021904,130219,'کابل HDMI - یک و نیم متر hp',5,NULL,NULL),(13022001,130220,'پاور بانک Energizer UE10046 10000mA',5,NULL,NULL),(13022002,130220,'نام پاور بانک جدید',1,5.000000000,5),(13022101,130221,'وب کم Cam ASDA',5,NULL,NULL),(13022102,130216,'مودم TP-link TD-8961N',5,NULL,NULL);
+/*!40000 ALTER TABLE `item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `item_price`
+--
+
+DROP TABLE IF EXISTS `item_price`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_price` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `price_type` int(11) DEFAULT NULL,
+  `date` bigint(20) DEFAULT NULL,
+  `item_id` bigint(20) DEFAULT NULL,
+  `price` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_price_un` (`price_type`,`date`,`item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `item_price`
+--
+
+LOCK TABLES `item_price` WRITE;
+/*!40000 ALTER TABLE `item_price` DISABLE KEYS */;
+/*!40000 ALTER TABLE `item_price` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itemcategory`
+--
+
+DROP TABLE IF EXISTS `itemcategory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itemcategory` (
+  `categoryId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `categoryParentId` bigint(20) DEFAULT NULL,
+  `description` varchar(40) COLLATE utf8_persian_ci NOT NULL,
+  PRIMARY KEY (`categoryId`),
+  KEY `categoryParentId` (`categoryParentId`),
+  CONSTRAINT `itemcategory_fk` FOREIGN KEY (`categoryParentId`) REFERENCES `itemcategory` (`categoryId`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=130222 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itemcategory`
+--
+
+LOCK TABLES `itemcategory` WRITE;
+/*!40000 ALTER TABLE `itemcategory` DISABLE KEYS */;
+INSERT INTO `itemcategory` VALUES (130208,NULL,'کیبورد'),(130209,NULL,'ماوس'),(130210,NULL,'نرم افزار کاربردی'),(130211,NULL,'نرم افزار بازی pc'),(130213,NULL,'گیم پد'),(130214,NULL,'ماوس پد'),(130215,NULL,'هندزفری'),(130216,NULL,'مودم'),(130217,NULL,'فلش مموری'),(130218,NULL,'شارژر موبایل'),(130219,NULL,'کابل'),(130220,NULL,'پاور بانک'),(130221,NULL,'وب کم');
+/*!40000 ALTER TABLE `itemcategory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `payments` (
+  `refType` int(11) DEFAULT NULL,
+  `refId` bigint(20) unsigned DEFAULT NULL,
+  `contactId` bigint(20) unsigned NOT NULL,
+  `creditor` decimal(16,4) DEFAULT NULL,
+  `debtor` decimal(16,4) DEFAULT NULL,
+  `objectId` bigint(20) NOT NULL,
+  `objectType` int(11) NOT NULL COMMENT 'انبار، صندوق، بانک و...',
+  `date` bigint(20) DEFAULT NULL,
+  KEY `payments_invoiceId_IDX` (`refId`) USING BTREE,
+  KEY `payments_contactId_IDX` (`contactId`) USING BTREE,
+  KEY `payments_objectType_IDX` (`objectType`) USING BTREE,
+  KEY `payments_documentId_IDX` (`refType`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payments`
+--
+
+LOCK TABLES `payments` WRITE;
+/*!40000 ALTER TABLE `payments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `unit`
+--
+
+DROP TABLE IF EXISTS `unit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `unit` (
+  `unitId` int(11) NOT NULL AUTO_INCREMENT,
+  `unitName` varchar(30) COLLATE utf8_persian_ci NOT NULL,
+  PRIMARY KEY (`unitId`),
+  UNIQUE KEY `idx_unitname` (`unitName`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `unit`
+--
+
+LOCK TABLES `unit` WRITE;
+/*!40000 ALTER TABLE `unit` DISABLE KEYS */;
+INSERT INTO `unit` VALUES (1,'بسته'),(2,'دست'),(3,'دستگاه'),(4,'شاخه'),(5,'عدد'),(6,'کیلوگرم'),(7,'لیتر'),(8,'متر');
+/*!40000 ALTER TABLE `unit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `view_item_avg_buy`
+--
+
+DROP TABLE IF EXISTS `view_item_avg_buy`;
+/*!50001 DROP VIEW IF EXISTS `view_item_avg_buy`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `view_item_avg_buy` (
+  `itemId` tinyint NOT NULL,
+  `total_su_amount_buy` tinyint NOT NULL,
+  `total_price_buy` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `view_item_avg_sell`
+--
+
+DROP TABLE IF EXISTS `view_item_avg_sell`;
+/*!50001 DROP VIEW IF EXISTS `view_item_avg_sell`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `view_item_avg_sell` (
+  `itemId` tinyint NOT NULL,
+  `date_sell` tinyint NOT NULL,
+  `suAmount_sell` tinyint NOT NULL,
+  `total_price_sell` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Current Database: `shopmanager`
+--
+
+USE `shopmanager`;
+
+--
+-- Final view structure for view `view_item_avg_buy`
+--
+
+/*!50001 DROP TABLE IF EXISTS `view_item_avg_buy`*/;
+/*!50001 DROP VIEW IF EXISTS `view_item_avg_buy`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_item_avg_buy` AS select `i1`.`itemId` AS `itemId`,sum(`i1`.`suAmount`) AS `total_su_amount_buy`,sum((`i1`.`suAmount` * `i1`.`suPrice`)) AS `total_price_buy` from `invoicedetail` `i1` where ((`i1`.`operationType` = 10) or (`i1`.`operationType` = 11)) group by `i1`.`itemId` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `view_item_avg_sell`
+--
+
+/*!50001 DROP TABLE IF EXISTS `view_item_avg_sell`*/;
+/*!50001 DROP VIEW IF EXISTS `view_item_avg_sell`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_item_avg_sell` AS select `i1`.`itemId` AS `itemId`,`i1`.`date` AS `date_sell`,`i1`.`suAmount` AS `suAmount_sell`,(`i1`.`suAmount` * `i1`.`suPrice`) AS `total_price_sell` from `invoicedetail` `i1` where ((`i1`.`operationType` = 20) or (`i1`.`operationType` = 21)) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-12-02 13:15:06

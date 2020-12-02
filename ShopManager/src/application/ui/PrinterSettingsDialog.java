@@ -8,8 +8,6 @@ package application.ui;
 import application.Application;
 import application.printer.Settings;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import ui.controls.PressButton;
 
@@ -35,6 +33,7 @@ public class PrinterSettingsDialog extends javax.swing.JDialog {
         inputHorizontalPadding.setText(Settings.getInt(Settings.KEY_PRINT_HORIZONTAL_PADDING) + "");
         inputVerticalPadding.setText(Settings.getInt(Settings.KEY_PRINT_VERTICAL_PADDING) + "");
         inputPageWidth.setText(Settings.getInt(Settings.KEY_PRINT_PAPER_WIDTH) + "");
+        inputPageHeight.setText(Settings.getInt(Settings.KEY_PRINT_PAPER_HEIGHT) + "");
         inputFieldShopTitle.setText(Settings.getString(Settings.KEY_SHOP_TITLE));
 
     }
@@ -52,6 +51,7 @@ public class PrinterSettingsDialog extends javax.swing.JDialog {
             Settings.save(Settings.KEY_PRINT_HORIZONTAL_PADDING, inputHorizontalPadding.getText().trim());
             Settings.save(Settings.KEY_PRINT_VERTICAL_PADDING, inputVerticalPadding.getText().trim());
             Settings.save(Settings.KEY_PRINT_PAPER_WIDTH, inputPageWidth.getText().trim());
+            Settings.save(Settings.KEY_PRINT_PAPER_HEIGHT, inputPageHeight.getText().trim());
             Settings.save(Settings.KEY_SHOP_TITLE, inputFieldShopTitle.getText().trim());
             dispose();
         } catch (SQLException ex) {
@@ -72,6 +72,7 @@ public class PrinterSettingsDialog extends javax.swing.JDialog {
         inputHorizontalPadding = new ui.controls.input.InputFieldNumber();
         inputVerticalPadding = new ui.controls.input.InputFieldNumber();
         inputPageWidth = new ui.controls.input.InputFieldNumber();
+        inputPageHeight = new ui.controls.input.InputFieldNumber();
         inputFieldShopTitle = new ui.controls.input.InputField();
         pressButtonApply = new ui.controls.PressButton();
 
@@ -96,6 +97,12 @@ public class PrinterSettingsDialog extends javax.swing.JDialog {
         inputPageWidth.setOpaque(false);
         inputPageWidth.setPreferredSize(new java.awt.Dimension(200, 39));
         getContentPane().add(inputPageWidth);
+
+        inputPageHeight.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ارتفاع صفحه", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        inputPageHeight.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        inputPageHeight.setOpaque(false);
+        inputPageHeight.setPreferredSize(new java.awt.Dimension(200, 39));
+        getContentPane().add(inputPageHeight);
 
         inputFieldShopTitle.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "عنوان فروشگاه", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         inputFieldShopTitle.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -128,6 +135,7 @@ public class PrinterSettingsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ui.controls.input.InputField inputFieldShopTitle;
     private ui.controls.input.InputFieldNumber inputHorizontalPadding;
+    private ui.controls.input.InputFieldNumber inputPageHeight;
     private ui.controls.input.InputFieldNumber inputPageWidth;
     private ui.controls.input.InputFieldNumber inputVerticalPadding;
     private ui.controls.PressButton pressButtonApply;
