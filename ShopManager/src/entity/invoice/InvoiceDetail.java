@@ -191,8 +191,8 @@ public class InvoiceDetail {
     public String getSummary() {
         return "فاکتور @1    تاریخ : @4   مقدار : @2     قیمت : @3"
                 .replace("@1", invoiceId + "")
-                .replace("@2", suAmount.stripTrailingZeros().toPlainString())
-                .replace("@3", suPrice.stripTrailingZeros().toPlainString())
+                .replace("@2", suAmount.abs().stripTrailingZeros().toPlainString())
+                .replace("@3", suPrice.abs().stripTrailingZeros().toPlainString())
                 .replace("@4", JalaliCalendar.format(date));
     }
 
@@ -203,6 +203,9 @@ public class InvoiceDetail {
     }
 
     public BigDecimal getAmount() {
+        if (Invoice.isExporting(operationType)) {
+            return amount.negate();
+        }
         return amount;
     }
 

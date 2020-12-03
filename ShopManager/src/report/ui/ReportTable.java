@@ -115,6 +115,10 @@ public class ReportTable extends javax.swing.JPanel {
     private javax.swing.JTable jTable;
     // End of variables declaration//GEN-END:variables
 
+    public void setReverse(boolean reverse){
+        reportTableModel.setIsReverse(reverse);
+    }
+    
     public void apply() {
         try {
             report.report();

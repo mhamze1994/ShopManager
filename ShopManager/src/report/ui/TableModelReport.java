@@ -22,6 +22,8 @@ public class TableModelReport extends DefaultTableModel {
 
     private final CustomArrayList<String[]> data;
 
+    private boolean isReverse = false;
+
     public TableModelReport(Report report) throws SQLException {
         data = new CustomArrayList<>();
 
@@ -31,6 +33,15 @@ public class TableModelReport extends DefaultTableModel {
 
     }
 
+    public boolean isIsReverse() {
+        return isReverse;
+    }
+
+    public void setIsReverse(boolean isReverse) {
+        this.isReverse = isReverse;
+    }
+
+    
     public void refresh() throws SQLException {
         this.report.report();
         String[] row;
@@ -49,7 +60,10 @@ public class TableModelReport extends DefaultTableModel {
         if (column == 0) {
             return row + 1;
         }
-        return data.get(row)[column - 1];
+
+        int indx = isReverse ? data.size() - row - 1 : row;
+
+        return data.get(indx)[column - 1];
     }
 
     @Override

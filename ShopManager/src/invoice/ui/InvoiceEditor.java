@@ -520,42 +520,42 @@ public final class InvoiceEditor extends javax.swing.JPanel {
     }
 
     private void refreshLatestTrades() {
-//        if (false == Invoice.isRefund(invoice.getOperationType())) {
-//            return;
-//        }
-//        if (contactPicker.getSelectedContact() == null || itemPicker.getSelectedItem() == null) {
-//            inputAreaLogEditor.setText("");
-//            return;
-//        }
-//        try {
-//            int refundType = -1;
-//            if (invoice.getOperationType() == Invoice.TYPE_REFUND_BUY) {
-//                refundType = Invoice.TYPE_BUY;
-//            } else if (invoice.getOperationType() == Invoice.TYPE_REFUND_SELL) {
-//                refundType = Invoice.TYPE_SELL;
-//            }
-//
-//            ArrayList<InvoiceDetail> latestDetails = InvoiceDetail.getLatestTrades(
-//                    contactPicker.getSelectedContact().getContactId(),
-//                    itemPicker.getSelectedItem().getItemId(),
-//                    refundType
-//            );
-//
-//            StringBuilder logText = new StringBuilder();
-//            logText.append(invoice.getOperationType() == Invoice.TYPE_REFUND_SELL ? "فروش های اخیر" : "خرید های اخیر")
-//                    .append(System.lineSeparator()).append(System.lineSeparator());
-//
-//            for (InvoiceDetail invoiceDetail : latestDetails) {
-//                logText.append("- ").append(invoiceDetail.getSummary()).append(System.lineSeparator()).append(System.lineSeparator());
-//            }
-//            if (latestDetails.isEmpty()) {
-//                logText.append("هیچ فاکتوری موجود نیست!");
-//            }
-//            inputAreaLogEditor.setText(logText.toString());
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        if (false == Invoice.isRefund(invoice.getOperationType())) {
+            return;
+        }
+        if (contactPicker.getSelectedContact() == null || itemPicker.getSelectedItem() == null) {
+            inputAreaLogEditor.setText("");
+            return;
+        }
+        try {
+            int refundType = -1;
+            if (invoice.getOperationType() == Invoice.TYPE_REFUND_BUY) {
+                refundType = Invoice.TYPE_BUY;
+            } else if (invoice.getOperationType() == Invoice.TYPE_REFUND_SELL) {
+                refundType = Invoice.TYPE_SELL;
+            }
+
+            ArrayList<InvoiceDetail> latestDetails = InvoiceDetail.getLatestTrades(
+                    contactPicker.getSelectedContact().getContactId(),
+                    itemPicker.getSelectedItem().getItemId(),
+                    refundType
+            );
+
+            StringBuilder logText = new StringBuilder();
+            logText.append(invoice.getOperationType() == Invoice.TYPE_REFUND_SELL ? "فروش های اخیر" : "خرید های اخیر")
+                    .append(System.lineSeparator()).append(System.lineSeparator());
+
+            for (InvoiceDetail invoiceDetail : latestDetails) {
+                logText.append("- ").append(invoiceDetail.getSummary()).append(System.lineSeparator()).append(System.lineSeparator());
+            }
+            if (latestDetails.isEmpty()) {
+                logText.append("هیچ فاکتوری موجود نیست!");
+            }
+            inputAreaLogEditor.setText(logText.toString());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

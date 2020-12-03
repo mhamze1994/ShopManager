@@ -6,6 +6,8 @@
 package report;
 
 import application.JalaliCalendar;
+import entity.invoice.Invoice;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -48,21 +50,46 @@ public class ReportPaymentBill extends Report {
         switch (index) {
             case 1:
                 int t = rs.getInt(1);
-                return t == 1 ? "فاکتور" : "سند";
+                String str = t == 1 ? "فاکتور" : "سند";
+                int operationType = rs.getInt(2);
+                switch (operationType) {
+                    case Invoice.TYPE_BUY:
+                        str += " خرید";
+                        break;
+                    case Invoice.TYPE_REFUND_BUY:
+                        str += " برگشت خرید";
+                        break;
+                    case Invoice.TYPE_SELL:
+                        str += " فروش";
+                        break;
+                    case Invoice.TYPE_REFUND_SELL:
+                        str += " برگشت فروش";
+                        break;
+                }
+                return str;
             case 2:
-                return rs.getLong(index) + "";
+                return rs.getLong(3) + "";
             case 3:
-                return JalaliCalendar.format(rs.getLong(index));
+                return JalaliCalendar.format(rs.getLong(4));
             case 4:
-                return rs.getString(index);
+                return rs.getString(5);
             case 5:
-                return rs.getBigDecimal(index).stripTrailingZeros().toPlainString();
+                return rs.getBigDecimal(7).stripTrailingZeros().toPlainString();
             case 6:
-                return rs.getBigDecimal(index).stripTrailingZeros().toPlainString();
+                return rs.getBigDecimal(6).stripTrailingZeros().toPlainString();
             case 7:
                 int type = rs.getInt(1);
-                if (type == 1) {
-                    return rs.getBigDecimal(index).stripTrailingZeros().toPlainString();
+                // type 1 means its an invoice. type 2 means its a free document
+                if (type == 1 && rs.getBigDecimal(8).compareTo(BigDecimal.ZERO) == -1) {
+                    return rs.getBigDecimal(8).abs().stripTrailingZeros().toPlainString();
+                } else {
+                    return "-";
+                }
+            case 8:
+                int type2 = rs.getInt(1);
+                // type 1 means its an invoice. type 2 means its a free document
+                if (type2 == 1 && rs.getBigDecimal(8).compareTo(BigDecimal.ZERO) == 1) {
+                    return rs.getBigDecimal(8).abs().stripTrailingZeros().toPlainString();
                 } else {
                     return "-";
                 }
@@ -87,7 +114,7 @@ public class ReportPaymentBill extends Report {
 
     @Override
     public String[] headers() {
-        return new String[]{"نوع", "شماره", "اخرین پرداخت", "فروشنده/خریدار", "بستانکار", "بدهکار", "مانده"};
+        return new String[]{"نوع", "شماره", "اخرین پرداخت", "فروشنده/خریدار", "بدهکار", "بستانکار", "مانده بدهکار", "مانده بستانکار"};
     }
 
 }

@@ -145,8 +145,8 @@ public class InvoiceManager {
             try (CallableStatement ps = DatabaseManager.instance.prepareCall("CALL payment_insert(1,?,?,?,?,?,?,?)")) {
                 DatabaseManager.SetLong(ps, 1, invoice.getInvoiceId());
                 DatabaseManager.SetLong(ps, 2, invoice.getContact());
-                DatabaseManager.SetBigDecimal(ps, 3, payment.getCreditor());
-                DatabaseManager.SetBigDecimal(ps, 4, payment.getDeptor());
+                DatabaseManager.SetBigDecimal(ps, 3, payment.getCreditor().abs());
+                DatabaseManager.SetBigDecimal(ps, 4, payment.getDeptor().abs());
                 DatabaseManager.SetLong(ps, 5, payment.getObjectId());
                 DatabaseManager.SetInt(ps, 6, payment.getObjectType());
                 DatabaseManager.SetLong(ps, 7, invoice.getDate());
@@ -156,7 +156,7 @@ public class InvoiceManager {
             if (payment.getObjectType() == Payment.CHEQUE) {
                 try (CallableStatement ps = DatabaseManager.instance.prepareCall("CALL cheque_insert(?,?,?,?,?,?)")) {
                     DatabaseManager.SetLong(ps, 1, payment.getExtraLong("bankId"));
-                    DatabaseManager.SetBigDecimal(ps, 2, Calculator.add(payment.getDeptor(), payment.getCreditor()));
+                    DatabaseManager.SetBigDecimal(ps, 2, Calculator.add(payment.getDeptor().abs(), payment.getCreditor().abs()));
                     DatabaseManager.SetInt(ps, 3, Invoice.isExporting(invoice.getOperationType()) ? 1 : 2);//1 received cheque , 2 payed cheque
                     DatabaseManager.SetLong(ps, 4, payment.getExtraLong("serial"));
                     DatabaseManager.SetLong(ps, 5, invoice.getInvoiceId());

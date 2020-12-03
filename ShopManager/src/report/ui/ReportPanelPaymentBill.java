@@ -50,7 +50,7 @@ public class ReportPanelPaymentBill extends javax.swing.JPanel {
 
         int pIndex = 0;
         reportTable.setColumnPreferredWidth(pIndex++, 30);
-        reportTable.setColumnPreferredWidth(pIndex++, 50);
+        reportTable.setColumnPreferredWidth(pIndex++, 130);
         reportTable.setColumnPreferredWidth(pIndex++, 100);
         reportTable.setColumnPreferredWidth(pIndex++, 100);
         reportTable.setColumnPreferredWidth(pIndex++, 200);

@@ -8,8 +8,6 @@ package report.ui;
 import invoice.ui.CustomFocusTraversalPolicy;
 import java.awt.Component;
 import java.util.ArrayList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import report.ReportCustomerItemBill;
 import ui.container.GroupPane;
 import ui.container.TabbedContainer;
@@ -55,19 +53,21 @@ public class ReportPanelCustomerItemBill extends GroupPane {
         reportTable.setColumnPreferredWidth(index++, 50);
         reportTable.setColumnPreferredWidth(index++, 70);
         reportTable.setColumnPreferredWidth(index++, 80);
+        reportTable.setColumnPreferredWidth(index++, 80);
+        reportTable.setColumnPreferredWidth(index++, 150);
+        reportTable.setColumnPreferredWidth(index++, 80);
+        reportTable.setColumnPreferredWidth(index++, 80);
+        reportTable.setColumnPreferredWidth(index++, 220);
         reportTable.setColumnPreferredWidth(index++, 100);
-        reportTable.setColumnPreferredWidth(index++, 80);
-        reportTable.setColumnPreferredWidth(index++, 60);
-        reportTable.setColumnPreferredWidth(index++, 80);
-        reportTable.setColumnPreferredWidth(index++, 200);
-        reportTable.setColumnPreferredWidth(index++, 40);
-        reportTable.setColumnPreferredWidth(index++, 50);
+        reportTable.setColumnPreferredWidth(index++, 100);
+        reportTable.setColumnPreferredWidth(index++, 100);
 
         java.awt.EventQueue.invokeLater(() -> {
             contactPicker1.getNumberField().requestFocusInWindow();
         });
 
-       
+        reportTable.setReverse(true);
+
     }
 
     /**
