@@ -386,7 +386,13 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             }
         } catch (SQLException ex) {
             DatabaseManager.instance.Rollback();
-            Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
+            String msg = ex.getMessage();
+            if (msg.equalsIgnoreCase("date_out_of_range")) {
+                msg = "تاریخ خارج از سال مالی میباشد.";
+                JOptionPane.showMessageDialog(this, msg, "خطای تاریخ", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Logger.getLogger(InvoiceEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

@@ -83,6 +83,9 @@ public class Application extends javax.swing.JFrame {
 
         tabbedContainerHeader = new ui.container.TabbedContainer();
         panelStoreAndItems = new ui.container.GroupPane();
+        buttonBankAccounts = new ui.controls.ImageButton();
+        buttonCashBox = new ui.controls.ImageButton();
+        jSeparator3 = new javax.swing.JSeparator();
         buttonAnbarGardani = new ui.controls.ImageButton();
         buttonPriceAnnounce = new ui.controls.ImageButton();
         buttonDefineItem = new ui.controls.ImageButton();
@@ -115,6 +118,31 @@ public class Application extends javax.swing.JFrame {
 
         panelStoreAndItems.setPreferredSize(new java.awt.Dimension(690, 110));
         panelStoreAndItems.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        buttonBankAccounts.setText("حساب بانکی");
+        buttonBankAccounts.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonBankAccounts.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonBankAccounts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonBankAccountsMousePressed(evt);
+            }
+        });
+        panelStoreAndItems.add(buttonBankAccounts);
+
+        buttonCashBox.setText("صندوق");
+        buttonCashBox.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonCashBox.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonCashBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonCashBoxMousePressed(evt);
+            }
+        });
+        panelStoreAndItems.add(buttonCashBox);
+
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator3.setToolTipText("");
+        jSeparator3.setPreferredSize(new java.awt.Dimension(3, 70));
+        panelStoreAndItems.add(jSeparator3);
 
         buttonAnbarGardani.setText("انبارگردانی");
         buttonAnbarGardani.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
@@ -380,6 +408,14 @@ public class Application extends javax.swing.JFrame {
         openPerItemProfitPanel();
     }//GEN-LAST:event_buttonReportProfitMousePressed
 
+    private void buttonCashBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonCashBoxMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonCashBoxMousePressed
+
+    private void buttonBankAccountsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonBankAccountsMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonBankAccountsMousePressed
+
     private void beginBackup() {
 
         JFileChooser chooser = new JFileChooser();
@@ -521,7 +557,9 @@ public class Application extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ui.controls.ImageButton ButtonRefundSell;
     private ui.controls.ImageButton buttonAnbarGardani;
+    private ui.controls.ImageButton buttonBankAccounts;
     private ui.controls.ImageButton buttonBuy;
+    private ui.controls.ImageButton buttonCashBox;
     private ui.controls.ImageButton buttonContacts;
     private ui.controls.ImageButton buttonDefineItem;
     private ui.controls.ImageButton buttonEditBuy;
@@ -537,6 +575,7 @@ public class Application extends javax.swing.JFrame {
     private ui.controls.ImageButton buttonUser;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private ui.container.GroupPane mainPanel;
     private ui.container.GroupPane panelBuy;
     private ui.container.GroupPane panelReports;

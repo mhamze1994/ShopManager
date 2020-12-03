@@ -45,6 +45,7 @@ public class ReportPanelPaymentSum extends javax.swing.JPanel {
         reportTable.setColumnPreferredWidth(pIndex++, 120);
         reportTable.setColumnPreferredWidth(pIndex++, 120);
         reportTable.setColumnPreferredWidth(pIndex++, 120);
+        reportTable.setColumnPreferredWidth(pIndex++, 120);
 
         ArrayList<Component> uiComponentOrder = new ArrayList<>();
         uiComponentOrder.add(contactPicker1.getNumberField());
