@@ -245,12 +245,12 @@ public class ItemEditor extends javax.swing.JPanel {
 
         inputDescription.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شرح کالا", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        inputUnit1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "واحد 1", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        inputUnit1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "واحد بزرگتر", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        inputRatio1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ضریب", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        inputRatio1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ضریب تبدیل", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         inputRatio1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        inputUnit2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "واحد 2", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        inputUnit2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "واحد کوچتر", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         comboListCategory.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "دسته", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 

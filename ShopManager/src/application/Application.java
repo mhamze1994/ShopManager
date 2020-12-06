@@ -5,6 +5,7 @@
  */
 package application;
 
+import application.ui.CashBoxDialog;
 import entity.invoice.Invoice;
 import invoice.ui.InvoiceEditor;
 import application.ui.ContactEditor;
@@ -64,7 +65,7 @@ public class Application extends javax.swing.JFrame {
         buttonToolPrinter.setImage(AppResource.getImage(AppResource.ICON_PRINTER_SETTING, AppTheme.COLOR_MAIN));
 
         buttonAnbarGardani.setImage(AppResource.getImage(AppResource.ICON_WAREHOUSE, AppTheme.COLOR_MAIN));
-        
+
         buttonReportProfit.setImage(AppResource.getImage(AppResource.ICON_PROFIT_LOSS, AppTheme.COLOR_MAIN));
 
         buttonUser.setVisible(false);
@@ -92,6 +93,8 @@ public class Application extends javax.swing.JFrame {
         buttonContacts = new ui.controls.ImageButton();
         buttonUser = new ui.controls.ImageButton();
         panelBuy = new ui.container.GroupPane();
+        buttonInitStock = new ui.controls.ImageButton();
+        jSeparator4 = new javax.swing.JSeparator();
         buttonEditBuy = new ui.controls.ImageButton();
         jSeparator2 = new javax.swing.JSeparator();
         ButtonRefundSell = new ui.controls.ImageButton();
@@ -200,6 +203,21 @@ public class Application extends javax.swing.JFrame {
 
         panelBuy.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        buttonInitStock.setText("موجودی اولیه");
+        buttonInitStock.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
+        buttonInitStock.setPreferredSize(new java.awt.Dimension(70, 70));
+        buttonInitStock.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buttonInitStockMousePressed(evt);
+            }
+        });
+        panelBuy.add(buttonInitStock);
+
+        jSeparator4.setForeground(new java.awt.Color(204, 204, 204));
+        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator4.setPreferredSize(new java.awt.Dimension(2, 70));
+        panelBuy.add(jSeparator4);
+
         buttonEditBuy.setText("اصلاح رسید");
         buttonEditBuy.setFont(new java.awt.Font("B Yekan", 0, 12)); // NOI18N
         buttonEditBuy.setPreferredSize(new java.awt.Dimension(70, 70));
@@ -260,7 +278,7 @@ public class Application extends javax.swing.JFrame {
         });
         panelBuy.add(buttonBuy);
 
-        tabbedContainerHeader.addTab("خرید/فروش", panelBuy);
+        tabbedContainerHeader.addTab("فروشگاه", panelBuy);
 
         panelReports.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
@@ -409,12 +427,16 @@ public class Application extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonReportProfitMousePressed
 
     private void buttonCashBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonCashBoxMousePressed
-        // TODO add your handling code here:
+        CashBoxDialog.open();
     }//GEN-LAST:event_buttonCashBoxMousePressed
 
     private void buttonBankAccountsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonBankAccountsMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonBankAccountsMousePressed
+
+    private void buttonInitStockMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonInitStockMousePressed
+        openInvoiceInitStock();
+    }//GEN-LAST:event_buttonInitStockMousePressed
 
     private void beginBackup() {
 
@@ -439,6 +461,10 @@ public class Application extends javax.swing.JFrame {
 
     private void openInvoiceSell() {
         openInvoicePanel(new Invoice(Invoice.TYPE_SELL));
+    }
+
+    private void openInvoiceInitStock() {
+        openInvoicePanel(new Invoice(Invoice.TYPE_INIT_STOCK));
     }
 
     private void openInvoiceRefundBuy() {
@@ -563,6 +589,7 @@ public class Application extends javax.swing.JFrame {
     private ui.controls.ImageButton buttonContacts;
     private ui.controls.ImageButton buttonDefineItem;
     private ui.controls.ImageButton buttonEditBuy;
+    private ui.controls.ImageButton buttonInitStock;
     private ui.controls.ImageButton buttonPriceAnnounce;
     private ui.controls.ImageButton buttonRefundBuy;
     private ui.controls.ImageButton buttonReportContactItem;
@@ -576,6 +603,7 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private ui.container.GroupPane mainPanel;
     private ui.container.GroupPane panelBuy;
     private ui.container.GroupPane panelReports;

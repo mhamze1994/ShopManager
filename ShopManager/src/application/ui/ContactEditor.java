@@ -8,7 +8,9 @@ package application.ui;
 import application.Application;
 import entity.Contact;
 import application.DatabaseManager;
+import invoice.ui.CustomFocusTraversalPolicy;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -62,11 +65,7 @@ public class ContactEditor extends GroupPane {
         pressButton3.setTextVerticalPosition(PressButton.POSITION_CENTER);
         pressButton3.drawTextUnderline(true);
 
-        setup();
         
-    }
-
-    public void setup() {
         loadContacts("");
 
         inputSearch.getDocument().addDocumentListener(new DocumentListener() {
@@ -85,8 +84,23 @@ public class ContactEditor extends GroupPane {
 
             }
         });
-        
+
+        ArrayList<Component> uiComponentOrder = new ArrayList<>();
+        uiComponentOrder.add(inputName);
+        uiComponentOrder.add(inputLastname);
+        uiComponentOrder.add(inputFathername);
+        uiComponentOrder.add(inputNationalId);
+        uiComponentOrder.add(inputPhone);
+        uiComponentOrder.add(inputAddress);
+        uiComponentOrder.add(pressButton1);
+        uiComponentOrder.add(pressButton2);
+        uiComponentOrder.add(pressButton3);
+
+        groupPane2.setFocusCycleRoot(true);
+        groupPane2.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(uiComponentOrder));
+
         createNew();
+
     }
 
     private void loadContacts(String pattern) {
@@ -252,7 +266,6 @@ public class ContactEditor extends GroupPane {
         inputName.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "نام", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("B Yekan+", 0, 12))); // NOI18N
         inputName.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         inputName.setFont(new java.awt.Font("B Yekan+", 0, 14)); // NOI18N
-        inputName.setNextFocusableComponent(inputLastname);
         inputName.setOpaque(false);
         inputName.setPreferredSize(new java.awt.Dimension(230, 43));
 
@@ -260,7 +273,6 @@ public class ContactEditor extends GroupPane {
         inputLastname.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "نام و نام خانوادگی", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("B Yekan+", 0, 12))); // NOI18N
         inputLastname.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         inputLastname.setFont(new java.awt.Font("B Yekan+", 0, 14)); // NOI18N
-        inputLastname.setNextFocusableComponent(inputFathername);
         inputLastname.setOpaque(false);
         inputLastname.setPreferredSize(new java.awt.Dimension(230, 43));
 
@@ -268,7 +280,6 @@ public class ContactEditor extends GroupPane {
         inputFathername.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "نام پدر", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("B Yekan+", 0, 12))); // NOI18N
         inputFathername.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         inputFathername.setFont(new java.awt.Font("B Yekan+", 0, 14)); // NOI18N
-        inputFathername.setNextFocusableComponent(inputNationalId);
         inputFathername.setOpaque(false);
         inputFathername.setPreferredSize(new java.awt.Dimension(169, 43));
 
@@ -276,7 +287,6 @@ public class ContactEditor extends GroupPane {
         inputNationalId.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "شماره ملی", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("B Yekan+", 0, 12))); // NOI18N
         inputNationalId.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         inputNationalId.setFont(new java.awt.Font("B Yekan+", 0, 14)); // NOI18N
-        inputNationalId.setNextFocusableComponent(inputPhone);
         inputNationalId.setOpaque(false);
         inputNationalId.setPreferredSize(new java.awt.Dimension(170, 43));
 
@@ -326,7 +336,6 @@ public class ContactEditor extends GroupPane {
         inputAddress.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "آدرس", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("B Yekan+", 0, 12))); // NOI18N
         inputAddress.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         inputAddress.setFont(new java.awt.Font("B Yekan+", 0, 14)); // NOI18N
-        inputAddress.setNextFocusableComponent(inputId);
         inputAddress.setOpaque(false);
         inputAddress.setPreferredSize(new java.awt.Dimension(169, 43));
 

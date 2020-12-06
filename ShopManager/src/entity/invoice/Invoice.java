@@ -26,6 +26,14 @@ public class Invoice {
     public static final int TYPE_SELL = 20;
     public static final int TYPE_REFUND_SELL = 21;
 
+    public static final int TYPE_INIT_STOCK = 40;
+
+    public static final int TYPE_ENTER_STOCK = 50;
+
+    public static final int TYPE_EXIT_STOCK = 60;
+
+    public static final int TYPE_OTHER = 70;
+
     public static String getTypeTitle(int aInt) {
         switch (aInt) {
             case TYPE_BUY:
@@ -36,6 +44,14 @@ public class Invoice {
                 return "فروش";
             case TYPE_REFUND_SELL:
                 return "برگشت از فروش";
+            case TYPE_INIT_STOCK:
+                return "موجودی اولیه";
+            case TYPE_ENTER_STOCK:
+                return "رسید";
+            case TYPE_EXIT_STOCK:
+                return "حواله";
+            case TYPE_OTHER:
+                return "سند آزاد";
         }
         return "???";
     }
@@ -163,8 +179,11 @@ public class Invoice {
         //The contact will become creditor. when items are removed from stores
         //(sell or buy-refund) the contact is receiving the items hence becoming deptor
         boolean importing = Invoice.isImporting(getOperationType());
-        storePayment.setCreditor(importing ? totalCost : BigDecimal.ZERO);
-        storePayment.setDeptor(importing ? BigDecimal.ZERO : totalCost);
+
+        if (storePayment != null) {
+            storePayment.setCreditor(importing ? totalCost : BigDecimal.ZERO);
+            storePayment.setDeptor(importing ? BigDecimal.ZERO : totalCost);
+        }
 
     }
 
@@ -179,9 +198,11 @@ public class Invoice {
     }
 
     private void updateAllDetails() {
-        storePayment.setContact(contact);
-        storePayment.setObjectId(1);
-        storePayment.setObjectType(Payment.STORE);
+        if (storePayment != null) {
+            storePayment.setContact(contact);
+            storePayment.setObjectId(1);
+            storePayment.setObjectType(Payment.STORE);
+        }
 
         for (InvoiceDetail invoiceDetail : detailList) {
             updateDetail(invoiceDetail);
@@ -204,7 +225,11 @@ public class Invoice {
 
     public ArrayList<Payment> getAllPayments() {
         ArrayList<Payment> all = new ArrayList<>();
-        all.add(storePayment);
+
+        if (storePayment != null) {
+            all.add(storePayment);
+        }
+
         all.addAll(contactPayment);
 
         return all;

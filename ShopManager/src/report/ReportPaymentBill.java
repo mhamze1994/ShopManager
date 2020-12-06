@@ -65,6 +65,9 @@ public class ReportPaymentBill extends Report {
                     case Invoice.TYPE_REFUND_SELL:
                         str += " برگشت فروش";
                         break;
+                    case Invoice.TYPE_INIT_STOCK:
+                        str = "موجودی اولیه";
+                        break;
                 }
                 return str;
             case 2:

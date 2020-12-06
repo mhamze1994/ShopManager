@@ -83,8 +83,10 @@ public class ContactPicker extends javax.swing.JPanel {
         String contactTitle;
         if (Invoice.inoutBuy(operationType)) {
             contactTitle = "فروشنده";
-        } else {
+        } else if (Invoice.inoutSell(operationType)) {
             contactTitle = "خریدار";
+        } else {
+            contactTitle = "مخاطب";
         }
         ((TitledBorder) searchBox.getBorder()).setTitle(contactTitle);
         ((TitledBorder) inputFieldNumber.getBorder()).setTitle("کد " + contactTitle);

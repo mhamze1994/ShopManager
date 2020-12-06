@@ -164,9 +164,17 @@ public final class InvoiceEditor extends javax.swing.JPanel {
 
         TitledBorder priceTitle = (TitledBorder) comboListPrice.getBorder();
         if (Invoice.inoutBuy(invoice.getOperationType())) {
-            priceTitle.setTitle("قیمت خرید");
+            priceTitle.setTitle("قیمت خرید واحد");
         } else if (Invoice.inoutSell(invoice.getOperationType())) {
-            priceTitle.setTitle("قیمت فروش");
+            priceTitle.setTitle("قیمت فروش واحد");
+        } else if (invoice.getOperationType() == Invoice.TYPE_INIT_STOCK) {
+            priceTitle.setTitle("ارزش واحد");
+        }
+        
+        if (Invoice.isExporting(invoice.getOperationType())){
+            textView1.setText("مبلغ دریافتی");
+        }else if(Invoice.isImporting(invoice.getOperationType())){
+            textView1.setText("مبلغ پرداختی");
         }
 
         invoice.setInvoiceUpdateListener(() -> {
@@ -187,8 +195,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
             addPaymentMethod(payment);
         }
         updateInvoiceSummery();
-        //Note itemdetails should already be inside inovicedetail and table
-        //will automatically update
+        
+        
     }
 
     private void setActionForAll(KeyStroke strokeCtrlEnter, String actionMapSaveInvoice, AbstractAction action) {
@@ -411,6 +419,8 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 break;
             case Invoice.TYPE_SELL:
                 title = "حواله فروش";
+            case Invoice.TYPE_INIT_STOCK:
+                title = "موجودی اولیه";
                 break;
         }
         if (contactPicker.getSelectedContact() != null) {
@@ -418,7 +428,7 @@ public final class InvoiceEditor extends javax.swing.JPanel {
         }
         this.parentTabbedPanel.setTitleAt(this.parentTabbedPanel.indexOfComponent(this), title.trim());
 
-        String titlePattern = "[1] فاکتور [2]";
+        String titlePattern = "[1] [3] [2]";
         titlePattern = titlePattern.replace("[1]", invoice.getInvoiceId() == 0 ? "ثبت" : "ویرایش");
         switch (invoice.getOperationType()) {
             case Invoice.TYPE_REFUND_BUY:
@@ -432,6 +442,19 @@ public final class InvoiceEditor extends javax.swing.JPanel {
                 break;
             case Invoice.TYPE_SELL:
                 titlePattern = titlePattern.replace("[2]", "فروش");
+            case Invoice.TYPE_INIT_STOCK:
+                titlePattern = titlePattern.replace("[2]", "موجودی اولیه");
+                break;
+        }
+        switch (invoice.getOperationType()) {
+            case Invoice.TYPE_REFUND_BUY:
+            case Invoice.TYPE_BUY:
+            case Invoice.TYPE_REFUND_SELL:
+            case Invoice.TYPE_SELL:
+                titlePattern = titlePattern.replace("[3]", "فاکتور");
+                break;
+            case Invoice.TYPE_INIT_STOCK:
+                titlePattern = titlePattern.replace("[3]", "");
                 break;
         }
         textViewTitle.setText(titlePattern);

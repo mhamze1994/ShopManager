@@ -7,12 +7,14 @@ package invoice.ui;
 
 import application.JalaliCalendar;
 import entity.Bank;
+import entity.CashBox;
 import entity.invoice.Invoice;
 import entity.Payment;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -222,8 +224,13 @@ public class PaymentUISimple extends javax.swing.JPanel {
     }
 
     public final DefaultComboBoxModel getCashBoxModel() {
+
         DefaultComboBoxModel<PaymentObject> dcbm = new DefaultComboBoxModel<>();
-        dcbm.addElement(new PaymentObject("صندوق 1", 1));
+
+        ArrayList<CashBox> cashBox = CashBox.listAll();
+        for (CashBox cb : cashBox) {
+            dcbm.addElement(new PaymentObject(cb.getTitle(), cb.getCashboxId()));
+        }
         return dcbm;
     }
 
@@ -232,7 +239,7 @@ public class PaymentUISimple extends javax.swing.JPanel {
         public String name;
         public long id;
 
-        private PaymentObject(String name, int id) {
+        private PaymentObject(String name, long id) {
             this.name = name;
             this.id = id;
         }

@@ -53,9 +53,9 @@ public class ReportPerItemProfit extends Report {
             case 3:
             case 4:
             case 5:
-                return rs.getBigDecimal(index).setScale(0, RoundingMode.HALF_EVEN).stripTrailingZeros().toPlainString();
+                return rs.getBigDecimal(index).abs().setScale(0, RoundingMode.HALF_EVEN).stripTrailingZeros().toPlainString();
             case 6:
-                return rs.getBigDecimal(3).multiply(rs.getBigDecimal(4).subtract(rs.getBigDecimal(5)))
+                return rs.getBigDecimal(3).abs().multiply(rs.getBigDecimal(4).subtract(rs.getBigDecimal(5)))
                         .setScale(0, RoundingMode.HALF_EVEN).stripTrailingZeros().toPlainString();
 
         }

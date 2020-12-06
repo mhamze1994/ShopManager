@@ -8,6 +8,9 @@ package report.ui;
 import invoice.ui.CustomFocusTraversalPolicy;
 import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
 import report.ReportCustomerItemBill;
 import ui.container.GroupPane;
 import ui.container.TabbedContainer;
@@ -66,8 +69,15 @@ public class ReportPanelCustomerItemBill extends GroupPane {
             contactPicker1.getNumberField().requestFocusInWindow();
         });
 
-        reportTable.setReverse(true);
+        JTable jTable = reportTable.getjTable();
+        TableModelReport model = reportTable.getReportTableModel();
+        TableRowSorter sorter = new TableRowSorter(model);
+        jTable.setRowSorter(sorter);
 
+        reportTable.setReverse(true);
+        
+        apply();
+        
     }
 
     /**
@@ -217,16 +227,36 @@ public class ReportPanelCustomerItemBill extends GroupPane {
 
     private void apply() {
 
-        reportCustomerItemBill.setDateStart(inputDateFrom.isValidInput() ? Long.parseLong(inputDateFrom.getText().replace("/", "")) : 0L);
-        reportCustomerItemBill.setDateEnd(inputDateTo.isValidInput() ? Long.parseLong(inputDateTo.getText().replace("/", "")) : 0L);
+        long dateStart = inputDateFrom.isValidInput() ? Long.parseLong(inputDateFrom.getText().replace("/", "")) : 0L;
+        long dateEnd = inputDateTo.isValidInput() ? Long.parseLong(inputDateTo.getText().replace("/", "")) : Long.MAX_VALUE;
 
-        reportCustomerItemBill.setCustomerId(contactPicker1.getSelectedContact() == null
-                ? 0L : contactPicker1.getSelectedContact().getContactId());
+        long contactId = contactPicker1.getSelectedContact() == null
+                ? 0L : contactPicker1.getSelectedContact().getContactId();
 
-        reportCustomerItemBill.setItemId(itemPicker1.getSelectedItem() == null
-                ? 0L : itemPicker1.getSelectedItem().getItemId());
+        long itemId = itemPicker1.getSelectedItem() == null
+                ? 0L : itemPicker1.getSelectedItem().getItemId();
 
         reportTable.apply();
+
+        ((TableRowSorter) reportTable.getjTable().getRowSorter()).setRowFilter(
+                new RowFilter<TableModelReport, Object>() {
+            @Override
+            public boolean include(RowFilter.Entry<? extends TableModelReport, ? extends Object> entry) {
+                boolean include = true;
+
+                long date = Long.parseLong(entry.getValue(2).toString().replaceAll("/", ""));
+                include &= (date >= dateStart && date <= dateEnd);
+
+                if (contactId != 0) {
+                    include &= (contactId == Long.parseLong(entry.getValue(3).toString()));
+                }
+                if (itemId != 0) {
+                    include &= (itemId == Long.parseLong(entry.getValue(6).toString()));
+                }
+
+                return include;
+            }
+        });
 
     }
 

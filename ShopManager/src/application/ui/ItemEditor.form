@@ -155,7 +155,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder justification="3" title="&#x648;&#x627;&#x62d;&#x62f; 1"/>
+                        <TitledBorder justification="3" title="&#x648;&#x627;&#x62d;&#x62f; &#x628;&#x632;&#x631;&#x6af;&#x62a;&#x631;"/>
                       </Border>
                     </Property>
                   </Properties>
@@ -164,7 +164,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder justification="3" title="&#x636;&#x631;&#x6cc;&#x628;"/>
+                        <TitledBorder justification="3" title="&#x636;&#x631;&#x6cc;&#x628; &#x62a;&#x628;&#x62f;&#x6cc;&#x644;"/>
                       </Border>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
@@ -174,7 +174,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder justification="3" title="&#x648;&#x627;&#x62d;&#x62f; 2"/>
+                        <TitledBorder justification="3" title="&#x648;&#x627;&#x62d;&#x62f; &#x6a9;&#x648;&#x686;&#x62a;&#x631;"/>
                       </Border>
                     </Property>
                   </Properties>
