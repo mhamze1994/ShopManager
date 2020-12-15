@@ -21,3 +21,37 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/ShopManager/nbproject/private/
+/ShopManager/build/
+build
+/ShopManager/dist/
+/ShopManager/mysql/data/client-key.pem
+/ShopManager/mysql/data/DESKTOP-7MTHHGS.err
+/ShopManager/mysql/data/DESKTOP-7MTHHGS.pid
+/ShopManager/mysql/data/ib_buffer_pool
+/ShopManager/mysql/data/ib_logfile0
+/ShopManager/mysql/data/ib_logfile1
+/ShopManager/mysql/data/ibdata1
+/ShopManager/mysql/data/mysql.ibd
+/ShopManager/mysql/data/private_key.pem
+/ShopManager/mysql/data/public_key.pem
+/ShopManager/mysql/data/server-cert.pem
+/ShopManager/mysql/data/server-key.pem
+/ShopManager/mysql/data/undo_001
+/ShopManager/mysql/data/undo_002
+/ShopManager/mysql/data/#ib_16384_0.dblwr
+/ShopManager/mysql/data/#ib_16384_1.dblwr
+/ShopManager/mysql/data/auto.cnf
+/ShopManager/mysql/data/binlog.000001
+/ShopManager/mysql/data/binlog.000002
+/ShopManager/mysql/data/binlog.000003
+/ShopManager/mysql/data/binlog.000004
+/ShopManager/mysql/data/binlog.000005
+/ShopManager/mysql/data/binlog.000006
+/ShopManager/mysql/data/binlog.000007
+/ShopManager/mysql/data/binlog.000008
+/ShopManager/mysql/data/binlog.000009
+/ShopManager/mysql/data/binlog.index
+/ShopManager/mysql/data/ca.pem
+/ShopManager/mysql/data/ca-key.pem
+/ShopManager/mysql/data/client-cert.pem
